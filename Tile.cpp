@@ -32,9 +32,21 @@ Tile_t::Tile_t(Mat source, int xi, int yi, int width, int height) {
         }
     }
     
+    
+    
 }
 
 Tile_t::Tile_t(const Tile_t& orig) {
+}
+
+Tile_t::setTileType() {
+    
+    int num = 0;
+    for (int b = 0; b < 4; b++) {
+            if (isWhite(_boxes[b]._pixel) || isBlack(_boxes[b]._pixel)) 
+                num++;
+    }
+    
 }
 
 Tile_t::~Tile_t() {

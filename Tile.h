@@ -22,14 +22,15 @@ using namespace std;
 using namespace cv;
 
 enum TileType {
-    LOWER_RIGHT_CORNER,
-    LEFT_BORDER,
     UPPER_LEFT_CORNER,
-    UPPER_BORDER,
     UPPER_RIGHT_CORNER,
-    RIGHT_BORDER,
     LOWER_LEFT_CORNER,
-    LOWER_BORDER
+    LOWER_RIGHT_CORNER,
+    UPPER_BORDER,
+    LEFT_BORDER,
+    RIGHT_BORDER,
+    LOWER_BORDER,
+    INSIDE
 };
 
 class Tile_t {
@@ -54,6 +55,8 @@ public:
     Tile_t(Mat source, int xi, int yi, int width, int height);
     Tile_t(const Tile_t& orig);
     virtual ~Tile_t();
+    
+    setTileType();
 };
 
 #endif /* TILE_H */
