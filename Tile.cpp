@@ -43,7 +43,7 @@ Tile_t::setTileType() {
     
     int num = 0;
     for (int b = 0; b < 4; b++) {
-            if (isWhite(_boxes[b]._pixel) || isBlack(_boxes[b]._pixel)) 
+            if (_boxes[b].isWhite() || _boxes[b].isBlack())
                 num++;
     }
     

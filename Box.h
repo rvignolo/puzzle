@@ -38,6 +38,10 @@ public:
     Box_t();
     Box_t(const Box_t& orig);
     virtual ~Box_t();
+    
+    bool isWhite();
+    bool isBlack();
+    bool isColor(Vec3b color);
 };
 
 #endif /* BOX_H */
