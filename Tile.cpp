@@ -14,6 +14,10 @@
 #include "Tile.h"
 #include <opencv2/imgproc/imgproc.hpp>
 #include <opencv2/highgui/highgui.hpp>
+#include <iostream>
+
+using namespace std;
+using namespace cv;
 
 Tile_t::Tile_t(Mat source, int xi, int yi, int width, int height) {
     
@@ -32,14 +36,14 @@ Tile_t::Tile_t(Mat source, int xi, int yi, int width, int height) {
         }
     }
     
-    
+    setTileType();
     
 }
 
 Tile_t::Tile_t(const Tile_t& orig) {
 }
 
-Tile_t::setTileType() {
+void Tile_t::setTileType() {
     
     int num = 0;
     for (int b = 0; b < 4; b++) {
@@ -47,6 +51,21 @@ Tile_t::setTileType() {
                 num++;
     }
     
+    switch(num) {
+        case 0:
+            _type = INSIDE;
+            break;
+        case 2:
+            _type = BORDER;
+            break;
+        case 3:
+            _type = CORNER;
+            break;
+        default:
+            cout <<" image wrongly cropped" << endl;
+            exit(1);
+    }
+        
 }
 
 Tile_t::~Tile_t() {

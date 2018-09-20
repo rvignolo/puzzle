@@ -39,9 +39,9 @@ public:
     Box_t(const Box_t& orig);
     virtual ~Box_t();
     
-    bool isWhite();
-    bool isBlack();
-    bool isColor(Vec3b color);
+    int isWhite() { if (_pixel.val[0] == 255 && _pixel.val[1] == 255 && _pixel.val[2] == 255) return 1; else return 0; }
+    int isBlack() { if (_pixel.val[0] == 0   && _pixel.val[1] == 0   && _pixel.val[2] == 0  ) return 1; else return 0; }
+    int isColor(Vec3b pixel) { if (_pixel.val[0] == pixel.val[0] && _pixel.val[1] == pixel.val[1]  && _pixel.val[2] == pixel.val[2]) return 1; else return 0; }
 };
 
 #endif /* BOX_H */

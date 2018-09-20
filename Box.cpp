@@ -21,7 +21,3 @@ Box_t::Box_t(const Box_t& orig) {
 
 Box_t::~Box_t() {
 }
-
-Box_t::isWhite() {
-    if (_pixel.val[0])
-}

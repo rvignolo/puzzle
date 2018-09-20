@@ -30,7 +30,9 @@ enum TileType {
     LEFT_BORDER,
     RIGHT_BORDER,
     LOWER_BORDER,
-    INSIDE
+    INSIDE,
+    CORNER,
+    BORDER
 };
 
 class Tile_t {
@@ -56,7 +58,7 @@ public:
     Tile_t(const Tile_t& orig);
     virtual ~Tile_t();
     
-    setTileType();
+    void setTileType();
 };
 
 #endif /* TILE_H */

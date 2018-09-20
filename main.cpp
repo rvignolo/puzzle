@@ -36,7 +36,20 @@ int main (int argc, char** argv) {
     
     // search borders
     
-    
+    for (int y = 0; y < map._num_y; y++) {
+        for (int x = 0; x < map._num_x; x++) {
+            Tile_t *tile = map._tiles[y * map._num_x + x];
+            if (tile->_type == CORNER) {
+                string name = "corner_" + to_string(y * map._num_x + x) + ".png";
+                imwrite(name, tile->_crop);
+            }
+            
+            if (tile->_type == BORDER) {
+                string name = "border_" + to_string(y * map._num_x + x) + ".png";
+                imwrite(name, tile->_crop);
+            }
+        }
+    }
     
     return EXIT_SUCCESS;
 }
