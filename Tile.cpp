@@ -26,7 +26,13 @@ Tile_t::Tile_t(Mat source, int xi, int yi, int width, int height) {
     
     _crop = source(Rect(xi, yi, width, height));
     
-    // boxes
+    // fill the boxes and set tile type
+    fillBoxes(width, height);
+    setTileType();
+}
+
+void Tile_t::fillBoxes(int width, int height) {
+    
     int b = 0;
     for (int y = 0; y < 2; y++) {
         for (int x = 0; x < 2; x++) {
@@ -35,37 +41,62 @@ Tile_t::Tile_t(Mat source, int xi, int yi, int width, int height) {
             b++;
         }
     }
-    
-    setTileType();
-    
-}
-
-Tile_t::Tile_t(const Tile_t& orig) {
 }
 
 void Tile_t::setTileType() {
     
     int num = 0;
     for (int b = 0; b < 4; b++) {
-            if (_boxes[b].isWhite() || _boxes[b].isBlack())
-                num++;
+        if (_boxes[b].isWhite() || _boxes[b].isBlack())
+            num++;
     }
     
     switch(num) {
         case 0:
-            _type = INSIDE;
+            _type = INTERNAL;
             break;
         case 2:
-            _type = BORDER;
+            if ((_boxes[0].isWhite() || _boxes[0].isBlack()) && (_boxes[1].isWhite() || _boxes[1].isBlack()))
+                _type = LOWER_BORDER;
+            else if ((_boxes[1].isWhite() || _boxes[1].isBlack()) && (_boxes[3].isWhite() || _boxes[3].isBlack()))
+                _type = LEFT_BORDER;
+            else if ((_boxes[2].isWhite() || _boxes[2].isBlack()) && (_boxes[3].isWhite() || _boxes[3].isBlack()))
+                _type = UPPER_BORDER;
+            else if ((_boxes[0].isWhite() || _boxes[0].isBlack()) && (_boxes[2].isWhite() || _boxes[2].isBlack()))
+                _type = RIGHT_BORDER;
+            else
+            {
+                cout <<" Image wrongly cropped" << endl;
+                exit(1);
+            }
             break;
         case 3:
-            _type = CORNER;
+            for (int b = 0; b < 4; b++) {
+                if (!_boxes[b].isWhite() && !_boxes[b].isBlack()) {
+                    switch(b) {
+                        case 0:
+                            _type = UPPER_LEFT_CORNER;
+                            break;
+                        case 1:
+                            _type = UPPER_RIGHT_CORNER;
+                            break;
+                        case 2:
+                            _type = LOWER_LEFT_CORNER;
+                            break;
+                        case 3:
+                            _type = LOWER_RIGHT_CORNER;
+                            break;
+                    }
+                }
+            }
             break;
         default:
-            cout <<" image wrongly cropped" << endl;
+            cout <<" Image wrongly cropped" << endl;
             exit(1);
     }
-        
+}
+
+Tile_t::Tile_t(const Tile_t& orig) {
 }
 
 Tile_t::~Tile_t() {

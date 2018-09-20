@@ -30,9 +30,7 @@ enum TileType {
     LEFT_BORDER,
     RIGHT_BORDER,
     LOWER_BORDER,
-    INSIDE,
-    CORNER,
-    BORDER
+    INTERNAL
 };
 
 class Tile_t {
@@ -48,6 +46,9 @@ public:
     /** The tile type */
     TileType _type;
     
+    /** The tile neighbors */
+    Tile_t *neighbors[8];
+    
     /** The azimuthal angle */
     double _theta;
     
@@ -58,6 +59,7 @@ public:
     Tile_t(const Tile_t& orig);
     virtual ~Tile_t();
     
+    void fillBoxes(int width, int height);
     void setTileType();
 };
 
