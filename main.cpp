@@ -30,91 +30,22 @@ int main (int argc, char** argv) {
         return EXIT_FAILURE;
     }
     
+    // read the source image as a map
     Map_t map(argv[1], 20, 20);
     
-    for (int y = 0; y < map._num_y; y++) {
-        for (int x = 0; x < map._num_x; x++) {
-            
-            Tile_t *tile = map._tiles[y * map._num_x + x];
-            
-            if (tile->_type == UPPER_LEFT_CORNER) {
-                string name = "upper_left_corner_" + to_string(y * map._num_x + x) + ".png";
-                imwrite(name, tile->_crop);
-            }
-            
-            if (tile->_type == UPPER_RIGHT_CORNER) {
-                string name = "upper_right_corner_" + to_string(y * map._num_x + x) + ".png";
-                imwrite(name, tile->_crop);
-            }
-            
-            if (tile->_type == LOWER_LEFT_CORNER) {
-                string name = "lower_left_corner_" + to_string(y * map._num_x + x) + ".png";
-                imwrite(name, tile->_crop);
-            }
-            
-            if (tile->_type == LOWER_RIGHT_CORNER) {
-                string name = "lower_right_corner_" + to_string(y * map._num_x + x) + ".png";
-                imwrite(name, tile->_crop);
-            }
-            
-            if (tile->_type == LEFT_BORDER) {
-                string name = "left_border_" + to_string(y * map._num_x + x) + ".png";
-                imwrite(name, tile->_crop);
-            }
-            
-            if (tile->_type == UPPER_BORDER) {
-                string name = "upper_border_" + to_string(y * map._num_x + x) + ".png";
-                imwrite(name, tile->_crop);
-            }
-            
-            if (tile->_type == RIGHT_BORDER) {
-                string name = "rigth_border_" + to_string(y * map._num_x + x) + ".png";
-                imwrite(name, tile->_crop);
-            }
-            
-            if (tile->_type == LOWER_BORDER) {
-                string name = "lower_border_" + to_string(y * map._num_x + x) + ".png";
-                imwrite(name, tile->_crop);
-            }
+    // solution map
+    Map_t solution(map._num_x, map._num_y);
+    
+    // fill the corners
+    int c = 0;
+    for (int y = 0; y < 2; y++) {
+        for (int x = 0; x < 2; x++) {
+            solution._tiles[y * (solution._num_y - 1) * solution._num_x + x * (solution._num_x - 1)] = map.getCornerTile(static_cast<TileType>(c));
+            c++;
         }
     }
     
-    // Mat qr = Mat::zeros(map._source.rows, map._source.cols, map._source.type());
-    
-    Map_t solution; // falta setear todo aca, el tamanyo y sin source image ( o sea hacer un map limpio basicamente)
-    
-    solution._tiles[0] = map.searchTile(UPPER_LEFT_CORNER);
-    
-    for (int y = 0; y < solution._num_y; y++) {
-        for (int x = 0; x < solution._num_x; x++) {
-            
-            Tile_t *tile = solution._tiles[y * solution._num_x + x];
-            
-            if(tile != nullptr) {
-                
-            }
-            
-        }
-    }
-    
-    
-    for (int y = 0; y < map._num_y; y++) {
-        for (int x = 0; x < map._num_x; x++) {
-            
-            Tile_t *tile = map._tiles[y * map._num_x + x];
-            
-            if (tile->_type == UPPER_LEFT_CORNER) {
-                
-                tile->neighbors[0] = tile->neighbors[1] = tile->neighbors[2] = tile->neighbors[3] = tile->neighbors[5] = nullptr;
-                
-                map.searchTile(type, box[4])
-                        
-            }
-            
-        }
-        
-    }
-    
+    solution.floodFill();
     
     return EXIT_SUCCESS;
 }

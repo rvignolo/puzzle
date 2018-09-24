@@ -28,7 +28,7 @@ class Map_t {
 public:
     
     /** An opencv matrix containing the source image */
-    Mat _source;
+    Mat _picture;
     
     /** The number of tiles on the x-axis */
     int _num_x;
@@ -51,8 +51,11 @@ public:
     /** The total energy of the map */
     double _energy;
     
+    void floodFill();
+    
     /** Constructor */
     Map_t(char *filename, int num_x, int num_y);
+    Map_t(int num_x, int num_y);
     
     /** Copy Constructor */
     Map_t(const Map_t& orig);
@@ -60,6 +63,7 @@ public:
     /** Destructor */
     virtual ~Map_t();
 
+    Tile_t *getCornerTile(TileType type);
 };
 
 #endif /* MAP_H */
