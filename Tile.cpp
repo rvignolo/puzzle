@@ -57,13 +57,13 @@ void Tile_t::setTileType() {
             break;
         case 2:
             if ((_boxes[0].isWhite() || _boxes[0].isBlack()) && (_boxes[1].isWhite() || _boxes[1].isBlack()))
-                _type = LOWER_BORDER;
-            else if ((_boxes[1].isWhite() || _boxes[1].isBlack()) && (_boxes[3].isWhite() || _boxes[3].isBlack()))
-                _type = LEFT_BORDER;
-            else if ((_boxes[2].isWhite() || _boxes[2].isBlack()) && (_boxes[3].isWhite() || _boxes[3].isBlack()))
                 _type = UPPER_BORDER;
-            else if ((_boxes[0].isWhite() || _boxes[0].isBlack()) && (_boxes[2].isWhite() || _boxes[2].isBlack()))
+            else if ((_boxes[1].isWhite() || _boxes[1].isBlack()) && (_boxes[3].isWhite() || _boxes[3].isBlack()))
                 _type = RIGHT_BORDER;
+            else if ((_boxes[2].isWhite() || _boxes[2].isBlack()) && (_boxes[3].isWhite() || _boxes[3].isBlack()))
+                _type = LOWER_BORDER;
+            else if ((_boxes[0].isWhite() || _boxes[0].isBlack()) && (_boxes[2].isWhite() || _boxes[2].isBlack()))
+                _type = LEFT_BORDER;
             else
             {
                 cout <<" Image wrongly cropped" << endl;
@@ -75,16 +75,16 @@ void Tile_t::setTileType() {
                 if (!_boxes[b].isWhite() && !_boxes[b].isBlack()) {
                     switch(b) {
                         case 0:
-                            _type = UPPER_LEFT_CORNER;
+                            _type = LOWER_RIGHT_CORNER;
                             break;
                         case 1:
-                            _type = UPPER_RIGHT_CORNER;
-                            break;
-                        case 2:
                             _type = LOWER_LEFT_CORNER;
                             break;
+                        case 2:
+                            _type = UPPER_RIGHT_CORNER;
+                            break;
                         case 3:
-                            _type = LOWER_RIGHT_CORNER;
+                            _type = UPPER_LEFT_CORNER;
                             break;
                     }
                 }

@@ -30,22 +30,15 @@ int main (int argc, char** argv) {
         return EXIT_FAILURE;
     }
     
-    // read the source image as a map
+    // read the source puzzle as a map
     Map_t map(argv[1], 20, 20);
     
-    // solution map
-    Map_t solution(map._num_x, map._num_y);
+    // solve the puzzle
+    map.solvePuzzle();
     
-    // fill the corners
-    int c = 0;
-    for (int y = 0; y < 2; y++) {
-        for (int x = 0; x < 2; x++) {
-            solution._tiles[y * (solution._num_y - 1) * solution._num_x + x * (solution._num_x - 1)] = map.getCornerTile(static_cast<TileType>(c));
-            c++;
-        }
-    }
     
-    solution.floodFill();
+    
+    
     
     return EXIT_SUCCESS;
 }

@@ -16,6 +16,7 @@
 
 #include "Tile.h"
 #include "Node.h"
+#include "Box.h"
 
 #include <iostream>
 #include <opencv2/imgproc/imgproc.hpp>
@@ -27,8 +28,11 @@ class Map_t {
 
 public:
     
-    /** An opencv matrix containing the source image */
-    Mat _picture;
+    /** An opencv matrix containing the source puzzle */
+    Mat _source_puzzle;
+    
+    /** An opencv matrix containing the solved puzzle */
+    Mat _solved_puzzle;
     
     /** The number of tiles on the x-axis */
     int _num_x;
@@ -43,7 +47,8 @@ public:
     int _delta_y;
     
     /** Array of tiles pointers */
-    Tile_t **_tiles;
+    Tile_t **_shuffled_tiles;
+    Tile_t **_ordered_tiles;
     
     /** A 2d array of nodes */
     Node_t **_nodes;
@@ -51,7 +56,12 @@ public:
     /** The total energy of the map */
     double _energy;
     
-    void floodFill();
+    
+    Tile_t *getCornerTile(TileType type);
+    Tile_t *getBorderTile(TileType type, Box_t boxes[4]);
+    
+    void floodFill(int x, int y);
+    void solvePuzzle();
     
     /** Constructor */
     Map_t(char *filename, int num_x, int num_y);
@@ -63,7 +73,6 @@ public:
     /** Destructor */
     virtual ~Map_t();
 
-    Tile_t *getCornerTile(TileType type);
 };
 
 #endif /* MAP_H */
