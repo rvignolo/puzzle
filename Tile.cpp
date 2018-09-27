@@ -19,80 +19,62 @@
 using namespace std;
 using namespace cv;
 
-Tile_t::Tile_t(Mat source, int xi, int yi, int width, int height) {
+Tile_t::Tile_t(Mat source_puzzle, int xi, int yi, int width, int height) {
     
-    // Mat croppedRef(source, Rect(xi, yi, width, height));
-    // croppedRef.copyTo(_crop);
+    // crop the source puzzle
+    _crop = source_puzzle(Rect(xi, yi, width, height));
     
-    _crop = source(Rect(xi, yi, width, height));
+    // init neighbors
+    _neighbors = new Tile_t*[4]();
     
-    // fill the boxes and set tile type
-    fillBoxes(width, height);
+    // fill the pixels
+    fillTilePixels(width, height);
+    
+    // set tile type
     setTileType();
 }
 
-void Tile_t::fillBoxes(int width, int height) {
+void Tile_t::fillTilePixels(int width, int height) {
     
-    int b = 0;
-    for (int y = 0; y < 2; y++) {
-        for (int x = 0; x < 2; x++) {
-            // _boxes[b]._pixel = _crop.at<Vec3b>(Point(x * width, y * height));
-            _boxes[b]._pixel = _crop.at<Vec3b>(y * (height - 1), x * (width - 1));
-            b++;
-        }
-    }
+    _pixel_ul = _crop.at<Vec3b>(0 * (height - 1), 0 * (width - 1));
+    _pixel_ur = _crop.at<Vec3b>(0 * (height - 1), 1 * (width - 1));
+    _pixel_dl = _crop.at<Vec3b>(1 * (height - 1), 0 * (width - 1));
+    _pixel_dr = _crop.at<Vec3b>(1 * (height - 1), 1 * (width - 1));
 }
 
 void Tile_t::setTileType() {
     
-    int num = 0;
-    for (int b = 0; b < 4; b++) {
-        if (_boxes[b].isWhite() || _boxes[b].isBlack())
-            num++;
-    }
-    
-    switch(num) {
-        case 0:
-            _type = INTERNAL;
-            break;
-        case 2:
-            if ((_boxes[0].isWhite() || _boxes[0].isBlack()) && (_boxes[1].isWhite() || _boxes[1].isBlack()))
-                _type = UPPER_BORDER;
-            else if ((_boxes[1].isWhite() || _boxes[1].isBlack()) && (_boxes[3].isWhite() || _boxes[3].isBlack()))
-                _type = RIGHT_BORDER;
-            else if ((_boxes[2].isWhite() || _boxes[2].isBlack()) && (_boxes[3].isWhite() || _boxes[3].isBlack()))
-                _type = LOWER_BORDER;
-            else if ((_boxes[0].isWhite() || _boxes[0].isBlack()) && (_boxes[2].isWhite() || _boxes[2].isBlack()))
-                _type = LEFT_BORDER;
-            else
-            {
-                cout <<" Image wrongly cropped" << endl;
-                exit(1);
-            }
-            break;
-        case 3:
-            for (int b = 0; b < 4; b++) {
-                if (!_boxes[b].isWhite() && !_boxes[b].isBlack()) {
-                    switch(b) {
-                        case 0:
-                            _type = LOWER_RIGHT_CORNER;
-                            break;
-                        case 1:
-                            _type = LOWER_LEFT_CORNER;
-                            break;
-                        case 2:
-                            _type = UPPER_RIGHT_CORNER;
-                            break;
-                        case 3:
-                            _type = UPPER_LEFT_CORNER;
-                            break;
-                    }
-                }
-            }
-            break;
-        default:
-            cout <<" Image wrongly cropped" << endl;
-            exit(1);
+    // first we check corners because a corner also satisfies a border condition
+    if (isUpperLeftCorner()) {
+        _type = UPPER_LEFT_CORNER;
+        return;
+    } else if (isUpperRightCorner()) {
+        _type = UPPER_RIGHT_CORNER;
+        return;
+    } else if (isLowerLeftCorner()) {
+        _type = LOWER_LEFT_CORNER;
+        return;
+    } else if (isLowerRightCorner()) {
+        _type = LOWER_RIGHT_CORNER;
+        return;
+    } else if (isLeftBorder()) {
+        _type = LEFT_BORDER;
+        return;
+    } else if (isUpperBorder()) {
+        _type = UPPER_BORDER;
+        return;
+    } else if (isRightBorder()) {
+        _type = RIGHT_BORDER;
+        return;
+    } else if (isLowerBorder()) {
+        _type = LOWER_BORDER;
+        return;
+    } else if (isInternal()) {
+        _type = INTERNAL;
+        return;
+    } else {
+        cout <<"Image wrongly cropped" << endl;
+        exit(1);
     }
 }
 

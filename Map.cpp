@@ -40,11 +40,27 @@ Map_t::Map_t(char * filename, int num_x, int num_y) {
     _shuffled_tiles = new Tile_t*[_num_x * _num_y]();
     _ordered_tiles = new Tile_t*[_num_x * _num_y]();
     
-    Tile_t *tile;
+    // fill the shuffled tiles
     for (int y = 0; y < _num_y; y++) {
         for (int x = 0; x < _num_x; x++) {
-            tile = new Tile_t(_source_puzzle, x * _delta_x + 1, y * _delta_y + 1, _delta_x - 1, _delta_y - 1);
-            _shuffled_tiles[y * _num_x + x] = tile;
+            _shuffled_tiles[y * _num_x + x] = new Tile_t(_source_puzzle, x * _delta_x + 1, y * _delta_y + 1, _delta_x - 1, _delta_y - 1);
+            _remaining_tiles.push_back(_shuffled_tiles[y * _num_x * x]);
+        }
+    }
+    
+    // fill neighbours
+    for (int y = 0; y < _num_y; y++) {
+        for (int x = 0; x < _num_x; x++) {
+            
+            int left_index =  y * _num_x + x - 1;
+            int upper_index = y * _num_x + x - _num_x;
+            int right_index = y * _num_x + x + 1;
+            int lower_index = y * _num_x + x + _num_x;
+            
+            _shuffled_tiles[y * _num_x + x]->_left_neighbour  = 0 <= left_index  < _num_x * _num_y - 1 ? _shuffled_tiles[left_index]  : NULL;
+            _shuffled_tiles[y * _num_x + x]->_upper_neighbour = 0 <= upper_index < _num_x * _num_y - 1 ? _shuffled_tiles[upper_index] : NULL;
+            _shuffled_tiles[y * _num_x + x]->_right_neighbour = 0 <= right_index < _num_x * _num_y - 1 ? _shuffled_tiles[right_index] : NULL;
+            _shuffled_tiles[y * _num_x + x]->_lower_neighbour = 0 <= lower_index < _num_x * _num_y - 1 ? _shuffled_tiles[lower_index] : NULL;
         }
     }
 }
@@ -56,14 +72,9 @@ Tile_t *Map_t::getCornerTile(TileType type) {
         exit(1);
     }
     
-    Tile_t *tile;
-    for (int y = 0; y < _num_y; y++) {
-        for (int x = 0; x < _num_x; x++) {
-            tile = _shuffled_tiles[y * _num_x + x];
-            
-            if (tile->_type == type)
-                return tile;
-        }
+    for (list<Tile_t *>::iterator tile = _remaining_tiles.begin(); tile != _remaining_tiles.end(); tile++) {
+        if ((*tile)->_type == type)
+            return tile;
     }
     
     cout << "corner tile not found" << endl ;
@@ -129,31 +140,49 @@ Tile_t *Map_t::getBorderTile(TileType type, Box_t boxes[4]) {
     return tile1 != NULL ? tile1 : tile2 != NULL ? tile2 : tile3;
 }
 
-void Map_t::floodFill(int x, int y) {
+int Map_t::FloodFill(int x, int y) {
+    
+    // outside the domain
+    if (x < 0 || x >= _num_x || y < 0 || y >= _num_y)
+        return 0;
+    
+    // get the current tile
+    Tile_t *ordered_tile = _ordered_tiles[y * _num_x + x];
+    
+    // handle the searched tile
+    Tile_t *searched_tile;
     
     // corners
-    if (x == 0 && y == 0) {
-        _ordered_tiles[y * _num_x + x] = getCornerTile(UPPER_LEFT_CORNER);
-        floodFill(x + 1, y);
-    } else if (x == (_num_x - 1) && y == 0) {
-        _ordered_tiles[y * _num_x + x] = getCornerTile(UPPER_RIGHT_CORNER);
-        floodFill(x, y + 1);
-    } else if (x == 0 && y == (_num_y - 1)) {
-        _ordered_tiles[y * _num_x + x] = getCornerTile(LOWER_LEFT_CORNER);
-        floodFill(x, y - 1);
-    } else if (x == (_num_x - 1) && y == (_num_y - 1)) {
-        _ordered_tiles[y * _num_x + x] = getCornerTile(LOWER_RIGHT_CORNER);
-        floodFill(x - 1, y);
+    if (x == 0 && y == 0)
+        searched_tile = getCornerTile(UPPER_LEFT_CORNER);
+    else if (x == (_num_x - 1) && y == 0)
+        searched_tile = getCornerTile(UPPER_RIGHT_CORNER);
+    else if (x == 0 && y == (_num_y - 1))
+        searched_tile = getCornerTile(LOWER_LEFT_CORNER);
+    else if (x == (_num_x - 1) && y == (_num_y - 1))
+        searched_tile = getCornerTile(LOWER_RIGHT_CORNER);
+    
+    // borders
+    if (y == 0){
+        
+        Tile_t *left_neighbor = ordered_tile.getLeftNeighbor();
+        
     }
     
-    Tile_t *tile;
-    Box_t boxes[4];
+    
+    
     // borders
     if (y == 0 && 0 < x < _num_x) {
         boxes[2] = _ordered_tiles[y * _num_x + x - 1]->_boxes[3];
         boxes[3] = _ordered_tiles[y * _num_x + x + 1] != NULL ? _ordered_tiles[y * _num_x + x + 1]->_boxes[2] : NULL;
-        tile = getBorderTile(UPPER_BORDER, boxes);
+        searched_tile = getBorderTile(UPPER_BORDER, boxes);
     }
+    
+    // internals
+    
+    
+    if (ordered_tile != NULL && ordered_tile != searched_tile)
+        ordered_tile = searched_tile;
     
     
     // 1: search a tile given the current tile neighbours
@@ -177,7 +206,7 @@ void Map_t::solvePuzzle() {
         }
     }
     
-    floodFill(0, 0);
+    FloodFill(0, 0);
     
 }
 

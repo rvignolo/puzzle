@@ -15,13 +15,12 @@
 #define MAP_H
 
 #include "Tile.h"
-#include "Node.h"
-#include "Box.h"
 
 #include <iostream>
 #include <opencv2/imgproc/imgproc.hpp>
 #include <opencv2/highgui/highgui.hpp>
 
+using namespace std;
 using namespace cv;
 
 class Map_t {
@@ -46,26 +45,23 @@ public:
     /** The size of each tile on the y-axis */
     int _delta_y;
     
-    /** Array of tiles pointers */
+    /** Array of tiles pointers: shuffled tiles are the input and ordered tiles
+     *  are the solution (output) of the problem */
     Tile_t **_shuffled_tiles;
     Tile_t **_ordered_tiles;
     
-    /** A 2d array of nodes */
-    Node_t **_nodes;
-    
-    /** The total energy of the map */
-    double _energy;
-    
+    /** List of remaining tiles pointers */
+    list<Tile_t *> _remaining_tiles;
     
     Tile_t *getCornerTile(TileType type);
     Tile_t *getBorderTile(TileType type, Box_t boxes[4]);
+    Tile_t *getInternalTile(Box_t boxes[4]);
     
-    void floodFill(int x, int y);
+    int FloodFill(int x, int y);
     void solvePuzzle();
     
     /** Constructor */
     Map_t(char *filename, int num_x, int num_y);
-    Map_t(int num_x, int num_y);
     
     /** Copy Constructor */
     Map_t(const Map_t& orig);
