@@ -54,10 +54,10 @@ public:
     list<Tile_t *> _remaining_tiles;
     
     Tile_t *getCornerTile(TileType type);
-    Tile_t *getBorderTile(TileType type, Box_t boxes[4]);
-    Tile_t *getInternalTile(Box_t boxes[4]);
+    Tile_t *getBorderTile(TileType type, Tile_t *first_neighbour, Tile_t *second_neighbour);
+    Tile_t *getInternalTile(Tile_t *left_neighbour, Tile_t *upper_neighbour, Tile_t *right_neighbour, Tile_t *lower_neighbour);
     
-    int FloodFill(int x, int y);
+    void FloodFill(int x, int y);
     void solvePuzzle();
     
     /** Constructor */
