@@ -54,7 +54,7 @@ public:
     list<Tile_t *> _remaining_tiles;
     
     Tile_t *getCornerTile(TileType type);
-    Tile_t *getBorderTile(TileType type, Tile_t *first_neighbour, Tile_t *second_neighbour);
+    Tile_t *getBorderTile(TileType type, Tile_t *n1, Tile_t *n2, Tile_t *n3);
     Tile_t *getInternalTile(Tile_t *left_neighbour, Tile_t *upper_neighbour, Tile_t *right_neighbour, Tile_t *lower_neighbour);
     
     void FloodFill(int x, int y);

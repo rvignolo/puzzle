@@ -16,7 +16,6 @@
 
 #include <opencv2/core/core.hpp>
 #include <list>
-#include "Box.h"
 
 using namespace std;
 using namespace cv;
@@ -124,10 +123,6 @@ public:
             return 1;
         else
             return 0;
-    }
-    
-    Tile_t *getLeftNeighbor() {
-        if 
     }
 };
 

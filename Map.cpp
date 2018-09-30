@@ -74,21 +74,43 @@ Tile_t *Map_t::getBorderTile(TileType type, Tile_t *n1, Tile_t *n2, Tile_t *n3) 
     Vec3b pixel_dl;
     Vec3b pixel_dr;
     
+    // set the pixels
+    switch(type) {
+        case LEFT_BORDER:
+            if (n1 != NULL)
+                pixel_ur = n1->_pixel_dr;
+            
+            if (n2 != NULL) {
+                pixel_ur = n2->_pixel_ul;
+                pixel_dr = n2->_pixel_dl;
+            }
+            
+            if (n3 != NULL)
+                pixel_dr = n3->_pixel_ur;
+        
+    }
+    
     // recorremos todos los remaining tiles
     int n_found = 0;
     for (list<Tile_t *>::iterator tile = _remaining_tiles.begin(); tile != _remaining_tiles.end(); tile++) {
         
-        switch(type) {
-            case LEFT_BORDER:
+        // si el tile es del tipo que buscamos
+        if((*tile)->_type == type) {
+            
+            // check perfect matches and soft matches
+            // a perfect match is when only one option is possible, including the case when we are checking only one pixel
+            switch(type) {
+                case LEFT_BORDER:
+                    if(pixel_ur == (*tile)->_pixel_ur && )
                 
-                if((*tile)->_type == LEFT_BORDER) {
-                    
-                    
-                    
-                }
                 
-                break;
+            }
+            
+            // hay que ver si los 4 pixels coinciden con lo que buscamos (es decir, 2 whites o blacks y 2 dados por los pixeles de arriba)
+            if (pixel_ul has a value, check it against the current iterated tile, if not, check if it is white or black)
+            
         }
+        
     }
     
     return n_found != 1 ? NULL : tile;
@@ -131,10 +153,10 @@ void Map_t::FloodFill(int x, int y) {
         int lower_index = y * _num_x + x + _num_x;
         
         // get the neighbours
-        Tile_t *left_neighbour  = (0 <= left_index  && left_index  < _num_x * _num_y) ? ordered_tile[left_index]  : NULL;
-        Tile_t *upper_neighbour = (0 <= upper_index && upper_index < _num_x * _num_y) ? ordered_tile[upper_index] : NULL;
-        Tile_t *right_neighbour = (0 <= right_index && right_index < _num_x * _num_y) ? ordered_tile[right_index] : NULL;
-        Tile_t *lower_neighbour = (0 <= lower_index && lower_index < _num_x * _num_y) ? ordered_tile[lower_index] : NULL;
+        Tile_t *left_neighbour  = (0 <= left_index  && left_index  < _num_x * _num_y) ? _ordered_tiles[left_index]  : NULL;
+        Tile_t *upper_neighbour = (0 <= upper_index && upper_index < _num_x * _num_y) ? _ordered_tiles[upper_index] : NULL;
+        Tile_t *right_neighbour = (0 <= right_index && right_index < _num_x * _num_y) ? _ordered_tiles[right_index] : NULL;
+        Tile_t *lower_neighbour = (0 <= lower_index && lower_index < _num_x * _num_y) ? _ordered_tiles[lower_index] : NULL;
         
         // TODO: FALTA REMOVER LOS BORDERS AND INTERNALS DE LA REMAINING!
         

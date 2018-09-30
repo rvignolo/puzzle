@@ -24,9 +24,6 @@ Tile_t::Tile_t(Mat source_puzzle, int xi, int yi, int width, int height) {
     // crop the source puzzle
     _crop = source_puzzle(Rect(xi, yi, width, height));
     
-    // init neighbors
-    _neighbors = new Tile_t*[4]();
-    
     // fill the pixels
     fillTilePixels(width, height);
     
