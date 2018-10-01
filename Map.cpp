@@ -12,6 +12,10 @@
  */
 
 #include "Map.h"
+#include <list>
+
+using namespace std;
+using namespace cv;
 
 Map_t::Map_t(char * filename, int num_x, int num_y) {
     
@@ -58,7 +62,7 @@ Tile_t *Map_t::getCornerTile(TileType type) {
     
     for (list<Tile_t *>::iterator tile = _remaining_tiles.begin(); tile != _remaining_tiles.end(); tile++) {
         if ((*tile)->_type == type)
-            return *tile;
+            return (*tile);
     }
     
     cout << "corner tile not found" << endl ;
@@ -67,53 +71,443 @@ Tile_t *Map_t::getCornerTile(TileType type) {
 
 Tile_t *Map_t::getBorderTile(TileType type, Tile_t *n1, Tile_t *n2, Tile_t *n3) {
     
-    Tile_t *tile;
+    if (type == INTERNAL || type == UPPER_LEFT_CORNER || type == UPPER_RIGHT_CORNER || type == LOWER_LEFT_CORNER || type == LOWER_RIGHT_CORNER) {
+        cout << "getBorderTile method is only implemented for border type tiles" << endl ;
+        exit(1);
+    }
+    
+    Tile_t *searched_tile;
     
     Vec3b pixel_ul;
     Vec3b pixel_ur;
     Vec3b pixel_dl;
     Vec3b pixel_dr;
     
+    // initialize them as blacks or whites
+    for (int i = 0; i < 3; i++) {
+        pixel_ul.val[i] = 0;
+        pixel_ur.val[i] = 0;
+        pixel_dl.val[i] = 0;
+        pixel_dr.val[i] = 0;
+    }
+    
+    int incomplete;
+    int complete;
+    int perfect_match = 0;
+    int soft_match = 0;
+    
     // set the pixels
     switch(type) {
         case LEFT_BORDER:
-            if (n1 != NULL)
-                pixel_ur = n1->_pixel_dr;
             
-            if (n2 != NULL) {
+            if (n1 != NULL && n2 != NULL && n3 != NULL) {
+                
+                // checks
+                if (n1->_pixel_dr != n2->_pixel_ul) {
+                    cout << "inconsistency found when searching a border tile" << endl ;
+                    exit(1);
+                }
+                
+                if (n2->_pixel_dl != n3->_pixel_ur) {
+                    cout << "inconsistency found when searching a border tile" << endl ;
+                    exit(1);
+                }
+                
+                // sets
                 pixel_ur = n2->_pixel_ul;
                 pixel_dr = n2->_pixel_dl;
-            }
-            
-            if (n3 != NULL)
+                
+                complete = 1;
+                
+            } else if (n1 != NULL && n2 != NULL && n3 == NULL) {
+                
+                // checks
+                if (n1->_pixel_dr != n2->_pixel_ul) {
+                    cout << "inconsistency found when searching a border tile" << endl ;
+                    exit(1);
+                }
+                
+                // sets
+                pixel_ur = n2->_pixel_ul;
+                pixel_dr = n2->_pixel_dl;
+                
+                complete = 1;
+                
+            } else if (n1 != NULL && n2 == NULL && n3 != NULL) {
+                
+                // sets
+                pixel_ur = n1->_pixel_dr;
                 pixel_dr = n3->_pixel_ur;
-        
+                
+                complete = 1;
+                
+            } else if (n1 == NULL && n2 != NULL && n3 != NULL) {
+                
+                // cheks
+                if (n2->_pixel_dl != n3->_pixel_ur) {
+                    cout << "inconsistency found when searching a border tile" << endl ;
+                    exit(1);
+                }
+                
+                // sets
+                pixel_ur = n2->_pixel_ul;
+                pixel_dr = n2->_pixel_dl;
+                
+                complete = 1;
+                
+            } else if (n1 != NULL && n2 == NULL && n3 == NULL) {
+                
+                // sets
+                pixel_ur = n1->_pixel_dr;
+                
+                incomplete = 1;
+                
+            } else if (n1 == NULL && n2 != NULL && n3 == NULL) {
+                
+                // sets
+                pixel_ur = n2->_pixel_ul;
+                pixel_dr = n2->_pixel_dl;
+                
+                complete = 1;
+                
+            } else if (n1 == NULL && n2 == NULL && n3 != NULL) {
+                
+                // sets
+                pixel_dr = n3->_pixel_ur;
+                
+                incomplete = 1;
+                
+            } else if (n1 == NULL && n2 == NULL && n3 == NULL) {
+                return NULL;
+            }
+            break;
+            
+        case UPPER_BORDER:
+            
+            if (n1 != NULL && n2 != NULL && n3 != NULL) {
+                
+                // checks
+                if (n1->_pixel_dr != n3->_pixel_ul) {
+                    cout << "inconsistency found when searching a border tile" << endl ;
+                    exit(1);
+                }
+                
+                if (n2->_pixel_dl != n3->_pixel_ur) {
+                    cout << "inconsistency found when searching a border tile" << endl ;
+                    exit(1);
+                }
+                
+                // sets
+                pixel_dl = n3->_pixel_ul;
+                pixel_dr = n3->_pixel_ur;
+                
+                complete = 1;
+                
+            } else if (n1 != NULL && n2 != NULL && n3 == NULL) {
+                
+                // sets
+                pixel_dl = n1->_pixel_dr;
+                pixel_dr = n2->_pixel_dl;
+                
+                complete = 1;
+                
+            } else if (n1 != NULL && n2 == NULL && n3 != NULL) {
+                
+                // checks
+                if (n1->_pixel_dr != n3->_pixel_ul) {
+                    cout << "inconsistency found when searching a border tile" << endl ;
+                    exit(1);
+                }
+                
+                // sets
+                pixel_dl = n3->_pixel_ul;
+                pixel_dr = n3->_pixel_ur;
+                
+                complete = 1;
+                
+            } else if (n1 == NULL && n2 != NULL && n3 != NULL) {
+                
+                // cheks
+                if (n2->_pixel_dl != n3->_pixel_ur) {
+                    cout << "inconsistency found when searching a border tile" << endl ;
+                    exit(1);
+                }
+                
+                // sets
+                pixel_dl = n3->_pixel_ul;
+                pixel_dr = n3->_pixel_ur;
+                
+                complete = 1;
+                
+            } else if (n1 != NULL && n2 == NULL && n3 == NULL) {
+                
+                // sets
+                pixel_dl = n1->_pixel_dr;
+                
+                incomplete = 1;
+                
+            } else if (n1 == NULL && n2 != NULL && n3 == NULL) {
+                
+                // sets
+                pixel_dr = n2->_pixel_dl;
+                
+                incomplete = 1;
+                
+            } else if (n1 == NULL && n2 == NULL && n3 != NULL) {
+                
+                // sets
+                pixel_dl = n3->_pixel_ul;
+                pixel_dr = n3->_pixel_ur;
+                
+                complete = 1;
+                
+            } else if (n1 == NULL && n2 == NULL && n3 == NULL) {
+                return NULL;
+            }
+            break;
+            
+        case RIGHT_BORDER:
+            
+            if (n1 != NULL && n2 != NULL && n3 != NULL) {
+                
+                // checks
+                if (n1->_pixel_ur != n2->_pixel_dl) {
+                    cout << "inconsistency found when searching a border tile" << endl ;
+                    exit(1);
+                }
+                
+                if (n1->_pixel_dr != n3->_pixel_ul) {
+                    cout << "inconsistency found when searching a border tile" << endl ;
+                    exit(1);
+                }
+                
+                // sets
+                pixel_ul = n1->_pixel_ur;
+                pixel_dl = n1->_pixel_dr;
+                
+                complete = 1;
+                
+            } else if (n1 != NULL && n2 != NULL && n3 == NULL) {
+                
+                // checks
+                if (n1->_pixel_ur != n2->_pixel_dl) {
+                    cout << "inconsistency found when searching a border tile" << endl ;
+                    exit(1);
+                }
+                
+                // sets
+                pixel_ul = n1->_pixel_ur;
+                pixel_dl = n1->_pixel_dr;
+                
+                complete = 1;
+                
+            } else if (n1 != NULL && n2 == NULL && n3 != NULL) {
+                
+                // checks
+                if (n1->_pixel_dr != n3->_pixel_ul) {
+                    cout << "inconsistency found when searching a border tile" << endl ;
+                    exit(1);
+                }
+                
+                // sets
+                pixel_ul = n1->_pixel_ur;
+                pixel_dl = n1->_pixel_dr;
+                
+                complete = 1;
+                
+            } else if (n1 == NULL && n2 != NULL && n3 != NULL) {
+                
+                // sets
+                pixel_ul = n2->_pixel_dl;
+                pixel_dl = n3->_pixel_ul;
+                
+                complete = 1;
+                
+            } else if (n1 != NULL && n2 == NULL && n3 == NULL) {
+                
+                // sets
+                pixel_ul = n1->_pixel_ur;
+                pixel_dl = n1->_pixel_dr;
+                
+                complete = 1;
+                
+            } else if (n1 == NULL && n2 != NULL && n3 == NULL) {
+                
+                // sets
+                pixel_ul = n2->_pixel_dl;
+                
+                incomplete = 1;
+                
+            } else if (n1 == NULL && n2 == NULL && n3 != NULL) {
+                
+                // sets
+                pixel_dl = n3->_pixel_ul;
+                
+                incomplete = 1;
+                
+            } else if (n1 == NULL && n2 == NULL && n3 == NULL) {
+                return NULL;
+            }
+            break;
+            
+        case LOWER_BORDER:
+            
+            if (n1 != NULL && n2 != NULL && n3 != NULL) {
+                
+                // checks
+                if (n1->_pixel_ur != n2->_pixel_dl) {
+                    cout << "inconsistency found when searching a border tile" << endl ;
+                    exit(1);
+                }
+                
+                if (n2->_pixel_dr != n3->_pixel_ul) {
+                    cout << "inconsistency found when searching a border tile" << endl ;
+                    exit(1);
+                }
+                
+                // sets
+                pixel_ul = n2->_pixel_dl;
+                pixel_ur = n2->_pixel_dr;
+                
+                complete = 1;
+                
+            } else if (n1 != NULL && n2 != NULL && n3 == NULL) {
+                
+                // checks
+                if (n1->_pixel_ur != n2->_pixel_dl) {
+                    cout << "inconsistency found when searching a border tile" << endl ;
+                    exit(1);
+                }
+                
+                // sets
+                pixel_ul = n2->_pixel_dl;
+                pixel_ur = n2->_pixel_dr;
+                
+                complete = 1;
+                
+            } else if (n1 != NULL && n2 == NULL && n3 != NULL) {
+                
+                // sets
+                pixel_ul = n1->_pixel_ur;
+                pixel_ur = n3->_pixel_ul;
+                
+                complete = 1;
+                
+            } else if (n1 == NULL && n2 != NULL && n3 != NULL) {
+                
+                if (n2->_pixel_dr != n3->_pixel_ul) {
+                    cout << "inconsistency found when searching a border tile" << endl ;
+                    exit(1);
+                }
+                
+                // sets
+                pixel_ul = n2->_pixel_dl;
+                pixel_ur = n2->_pixel_dr;
+                
+                complete = 1;
+                
+            } else if (n1 != NULL && n2 == NULL && n3 == NULL) {
+                
+                // sets
+                pixel_ul = n1->_pixel_ur;
+                
+                incomplete = 1;
+                
+            } else if (n1 == NULL && n2 != NULL && n3 == NULL) {
+                
+                // sets
+                pixel_ul = n2->_pixel_dl;
+                pixel_ur = n2->_pixel_dr;
+                
+                complete = 1;
+                
+            } else if (n1 == NULL && n2 == NULL && n3 != NULL) {
+                
+                // sets
+                pixel_ur = n3->_pixel_ul;
+                
+                incomplete = 1;
+                
+            } else if (n1 == NULL && n2 == NULL && n3 == NULL) {
+                return NULL;
+            }
+            break;
     }
     
     // recorremos todos los remaining tiles
-    int n_found = 0;
     for (list<Tile_t *>::iterator tile = _remaining_tiles.begin(); tile != _remaining_tiles.end(); tile++) {
         
         // si el tile es del tipo que buscamos
         if((*tile)->_type == type) {
             
-            // check perfect matches and soft matches
-            // a perfect match is when only one option is possible, including the case when we are checking only one pixel
             switch(type) {
                 case LEFT_BORDER:
-                    if(pixel_ur == (*tile)->_pixel_ur && )
-                
-                
+                    
+                    if (complete) {
+                        if(pixel_ur == (*tile)->_pixel_ur && pixel_dr == (*tile)->_pixel_dr) {
+                            perfect_match++;
+                            searched_tile = (*tile);
+                        }
+                    } else if(incomplete) {
+                        if (pixel_ur == (*tile)->_pixel_ur || pixel_dr == (*tile)->_pixel_dr) {
+                            soft_match++;
+                            searched_tile = (*tile);
+                        }
+                    }
+                    break;
+                    
+                case UPPER_BORDER:
+                    
+                    if (complete) {
+                        if(pixel_dl == (*tile)->_pixel_dl && pixel_dr == (*tile)->_pixel_dr) {
+                            perfect_match++;
+                            searched_tile = (*tile);
+                        }
+                    } else if(incomplete) {
+                        if (pixel_dl == (*tile)->_pixel_dl || pixel_dr == (*tile)->_pixel_dr) {
+                            soft_match++;
+                            searched_tile = (*tile);
+                        }
+                    }
+                    break;
+                    
+                case RIGHT_BORDER:
+                    if (complete) {
+                        if(pixel_ul == (*tile)->_pixel_ul && pixel_dl == (*tile)->_pixel_dl) {
+                            perfect_match++;
+                            searched_tile = (*tile);
+                        }
+                    } else if(incomplete) {
+                        if (pixel_ul == (*tile)->_pixel_ul || pixel_dl == (*tile)->_pixel_dl) {
+                            soft_match++;
+                            searched_tile = (*tile);
+                        }
+                    }
+                    break;
+                    
+                case LOWER_BORDER:
+                    if (complete) {
+                        if(pixel_ul == (*tile)->_pixel_ul && pixel_ur == (*tile)->_pixel_ur) {
+                            perfect_match++;
+                            searched_tile = (*tile);
+                        }
+                    } else if(incomplete) {
+                        if (pixel_ul == (*tile)->_pixel_ul || pixel_ur == (*tile)->_pixel_ur) {
+                            soft_match++;
+                            searched_tile = (*tile);
+                        }
+                    }
+                    break;
             }
-            
-            // hay que ver si los 4 pixels coinciden con lo que buscamos (es decir, 2 whites o blacks y 2 dados por los pixeles de arriba)
-            if (pixel_ul has a value, check it against the current iterated tile, if not, check if it is white or black)
-            
         }
         
     }
     
-    return n_found != 1 ? NULL : tile;
+    // we return the tile if only one case can be found in the remaining tiles
+    if (perfect_match == 1 || soft_match == 1) 
+        return searched_tile;
+    else
+        return NULL;
 }
 
 Tile_t *Map_t::getInternalTile(Tile_t *left_neighbour, Tile_t *upper_neighbour, Tile_t *right_neighbour, Tile_t *lower_neighbour) {
@@ -173,25 +567,13 @@ void Map_t::FloodFill(int x, int y) {
             ordered_tile = getInternalTile(left_neighbour, upper_neighbour, right_neighbour, lower_neighbour);
     }
     
-    
-    
     // left, up, right, down searches
     FloodFill(x - 1, y + 0);
     FloodFill(x + 0, y - 1);
     FloodFill(x + 1, y - 0);
     FloodFill(x - 0, y + 1);
     
-    
-    // 0: si estoy fuera del dominio o el tile ya fue seteado, return
-    
-    // 1: search a tile given the current tile neighbours
-    
-    // 2: si el searched tile es igual al current tile, do nothing (con lo actualizado, el current tile siempre es null y tengo que meter el searched)
-    
-    // 3: si el searched tile no es igual al actual, replace (esto se va con la actualizacion de ideas)
-    
-    // 4: search to north, south, east and west using the flood fill function
-    
+    return;
 }
 
 void Map_t::solvePuzzle() {

@@ -15,21 +15,20 @@
 #define TILE_H
 
 #include <opencv2/core/core.hpp>
-#include <list>
 
 using namespace std;
 using namespace cv;
 
 enum TileType {
-    UPPER_LEFT_CORNER = 0,
-    UPPER_RIGHT_CORNER = 1,
-    LOWER_LEFT_CORNER = 2,
-    LOWER_RIGHT_CORNER = 3,
-    UPPER_BORDER = 4,
-    LEFT_BORDER = 5,
-    RIGHT_BORDER = 6,
-    LOWER_BORDER = 7,
-    INTERNAL = 8
+    UPPER_LEFT_CORNER,
+    UPPER_RIGHT_CORNER,
+    LOWER_LEFT_CORNER,
+    LOWER_RIGHT_CORNER,
+    UPPER_BORDER,
+    LEFT_BORDER,
+    RIGHT_BORDER,
+    LOWER_BORDER,
+    INTERNAL
 };
 
 class Tile_t {
