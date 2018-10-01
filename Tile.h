@@ -16,7 +16,6 @@
 
 #include <opencv2/core/core.hpp>
 #include <list>
-#include "Box.h"
 
 using namespace std;
 using namespace cv;
@@ -48,12 +47,6 @@ public:
     Vec3b _pixel_ur;
     Vec3b _pixel_dl;
     Vec3b _pixel_dr;
-    
-    /** Neighbours */
-    Tile_t *_left_neighbour;
-    Tile_t *_upper_neighbour;
-    Tile_t *_right_neighbour;
-    Tile_t *_lower_neighbour;
     
     Tile_t(Mat source_puzzle, int xi, int yi, int width, int height);
     Tile_t(const Tile_t& orig);
@@ -124,10 +117,6 @@ public:
             return 1;
         else
             return 0;
-    }
-    
-    Tile_t *getLeftNeighbor() {
-        if 
     }
 };
 
