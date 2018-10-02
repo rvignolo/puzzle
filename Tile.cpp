@@ -19,7 +19,10 @@
 using namespace std;
 using namespace cv;
 
-Tile_t::Tile_t(Mat source_puzzle, int xi, int yi, int width, int height) {
+Tile_t::Tile_t(Mat source_puzzle, int id, int xi, int yi, int width, int height) {
+    
+    // set the id number
+    _id = id;
     
     // crop the source puzzle
     _crop = source_puzzle(Rect(xi, yi, width, height));

@@ -51,7 +51,7 @@ public:
     Tile_t **_shuffled_tiles;
     Tile_t **_ordered_tiles;
     
-    /** List of remaining tiles pointers */
+    /** A dynamically sized vector of tiles remaining in the _shuffled_tiles */
     list<Tile_t *> _remaining_tiles;
     
     Tile_t *getCornerTile(TileType type);

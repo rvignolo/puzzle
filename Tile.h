@@ -35,6 +35,9 @@ class Tile_t {
     
 public:
     
+    /** An id number */
+    int _id;
+    
     /** An opencv matrix containing the cropped tile */
     Mat _crop;
     
@@ -47,76 +50,79 @@ public:
     Vec3b _pixel_dl;
     Vec3b _pixel_dr;
     
-    Tile_t(Mat source_puzzle, int xi, int yi, int width, int height);
+    Tile_t(Mat source_puzzle, int id, int xi, int yi, int width, int height);
     Tile_t(const Tile_t& orig);
     virtual ~Tile_t();
     
     void fillTilePixels(int width, int height);
     void setTileType();
     
-    int isWhite(Vec3b pixel) { if (pixel.val[0] == 255 && pixel.val[1] == 255 && pixel.val[2] == 255) return 1; else return 0; }
-    int isBlack(Vec3b pixel) { if (pixel.val[0] == 0   && pixel.val[1] == 0   && pixel.val[2] == 0  ) return 1; else return 0; }
-    int isColor(Vec3b pixel1, Vec3b pixel2) {
+    bool isWhite(Vec3b pixel) { if (pixel.val[0] == 255 && pixel.val[1] == 255 && pixel.val[2] == 255) return true; else return false; }
+    bool isBlack(Vec3b pixel) { if (pixel.val[0] == 0   && pixel.val[1] == 0   && pixel.val[2] == 0  ) return true; else return false; }
+    bool isColor(Vec3b pixel1, Vec3b pixel2) {
         if (pixel1.val[0] == pixel2.val[0] && pixel1.val[1] == pixel2.val[1]  && pixel1.val[2] == pixel2.val[2]) 
-            return 1;
+            return true;
         else 
-            return 0;
+            return false;
     }
     
-    int isLeftBorder() {
+    bool isLeftBorder() {
         if ((isWhite(_pixel_ul) || isBlack(_pixel_ul)) && (isWhite(_pixel_dl) || isBlack(_pixel_dl)))
-            return 1;
+            return true;
         else
-            return 0;
+            return false;
     }
-    int isUpperBorder() {
+    bool isUpperBorder() {
         if ((isWhite(_pixel_ul) || isBlack(_pixel_ul)) && (isWhite(_pixel_ur) || isBlack(_pixel_ur)))
-            return 1;
+            return true;
         else
-            return 0;
+            return false;
     }
-    int isRightBorder() {
+    bool isRightBorder() {
         if ((isWhite(_pixel_ur) || isBlack(_pixel_ur)) && (isWhite(_pixel_dr) || isBlack(_pixel_dr)))
-            return 1;
+            return true;
         else
-            return 0;
+            return false;
     }
-    int isLowerBorder() {
+    bool isLowerBorder() {
         if ((isWhite(_pixel_dl) || isBlack(_pixel_dl)) && (isWhite(_pixel_dr) || isBlack(_pixel_dr)))
-            return 1;
+            return true;
         else
-            return 0;
+            return false;
     }
-    int isUpperLeftCorner() { 
+    bool isUpperLeftCorner() { 
         if (isLeftBorder() && isUpperBorder())
-            return 1;
+            return true;
         else
-            return 0; 
+            return false; 
     }
-    int isUpperRightCorner() {
+    bool isUpperRightCorner() {
         if (isRightBorder() && isUpperBorder()) 
-            return 1;
+            return true;
         else
-            return 0;
+            return false;
     }
-    int isLowerLeftCorner() {
+    bool isLowerLeftCorner() {
         if (isLeftBorder() && isLowerBorder()) 
-            return 1;
+            return true;
         else
-            return 0;
+            return false;
     }
-    int isLowerRightCorner() {
+    bool isLowerRightCorner() {
         if (isRightBorder() && isLowerBorder())
-            return 1;
+            return true;
         else
-            return 0;
+            return false;
     }
-    int isInternal() {
+    bool isInternal() {
         if ((!isWhite(_pixel_ul) && !isBlack(_pixel_ul)) && (!isWhite(_pixel_ur) && !isBlack(_pixel_ur)) && (!isWhite(_pixel_dl) && !isBlack(_pixel_dl)) && (!isWhite(_pixel_dr) && !isBlack(_pixel_dl)))
-            return 1;
+            return true;
         else
-            return 0;
+            return false;
     }
+    
+//    friend bool operator==(const Tile_t &t1, const Tile_t &t2);
+//    friend bool operator!=(const Tile_t &t1, const Tile_t &t2);
 };
 
 #endif /* TILE_H */
