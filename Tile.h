@@ -51,6 +51,7 @@ public:
     Vec3b _pixel_dr;
     
     Tile_t(Mat source_puzzle, int id, int xi, int yi, int width, int height);
+    Tile_t(TileType type, Vec3b pixel_ul, Vec3b pixel_ur, Vec3b pixel_dl, Vec3b pixel_dr);
     Tile_t(const Tile_t& orig);
     virtual ~Tile_t();
     
@@ -97,13 +98,13 @@ public:
             return false; 
     }
     bool isUpperRightCorner() {
-        if (isRightBorder() && isUpperBorder()) 
+        if (isRightBorder() && isUpperBorder())
             return true;
         else
             return false;
     }
     bool isLowerLeftCorner() {
-        if (isLeftBorder() && isLowerBorder()) 
+        if (isLeftBorder() && isLowerBorder())
             return true;
         else
             return false;
@@ -121,8 +122,8 @@ public:
             return false;
     }
     
-//    friend bool operator==(const Tile_t &t1, const Tile_t &t2);
-//    friend bool operator!=(const Tile_t &t1, const Tile_t &t2);
+    bool operator==(Tile_t t2);
+    bool operator!=(Tile_t t2);
 };
 
 #endif /* TILE_H */

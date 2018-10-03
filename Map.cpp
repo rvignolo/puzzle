@@ -55,7 +55,7 @@ Map_t::Map_t(char * filename, int num_x, int num_y) {
 
 Tile_t *Map_t::getCornerTile(TileType type) {
     
-    if (type != UPPER_LEFT_CORNER || type != UPPER_RIGHT_CORNER  || type != LOWER_LEFT_CORNER  || type != LOWER_RIGHT_CORNER) {
+    if (!(type == UPPER_LEFT_CORNER || type == UPPER_RIGHT_CORNER  || type == LOWER_LEFT_CORNER  || type == LOWER_RIGHT_CORNER)) {
         cout << "getCornerTile method is only implemented for corner type tiles" << endl ;
         exit(1);
     }
@@ -75,7 +75,7 @@ Tile_t *Map_t::getCornerTile(TileType type) {
 
 Tile_t *Map_t::getBorderTile(TileType type, Tile_t *n1, Tile_t *n2, Tile_t *n3) {
     
-    if (type != LEFT_BORDER || type != UPPER_BORDER || type != RIGHT_BORDER || type != LOWER_BORDER) {
+    if (!(type == LEFT_BORDER || type == UPPER_BORDER || type == RIGHT_BORDER || type == LOWER_BORDER)) {
         cout << "getBorderTile method is only implemented for border type tiles" << endl ;
         exit(1);
     }
@@ -85,7 +85,7 @@ Tile_t *Map_t::getBorderTile(TileType type, Tile_t *n1, Tile_t *n2, Tile_t *n3) 
     Vec3b pixel_dl;
     Vec3b pixel_dr;
     
-    // initialize them as blacks or whites
+    // initialize them as black
     for (int i = 0; i < 3; i++) {
         pixel_ul.val[i] = 0;
         pixel_ur.val[i] = 0;
@@ -93,10 +93,8 @@ Tile_t *Map_t::getBorderTile(TileType type, Tile_t *n1, Tile_t *n2, Tile_t *n3) 
         pixel_dr.val[i] = 0;
     }
     
-    int incomplete = 0;
-    int complete = 0;
-    
     // set the pixels
+    int complete;
     switch(type) {
         case LEFT_BORDER:
             
@@ -160,7 +158,7 @@ Tile_t *Map_t::getBorderTile(TileType type, Tile_t *n1, Tile_t *n2, Tile_t *n3) 
                 // sets
                 pixel_ur = n1->_pixel_dr;
                 
-                incomplete = 1;
+                complete = 0;
                 
             } else if (n1 == NULL && n2 != NULL && n3 == NULL) {
                 
@@ -175,7 +173,7 @@ Tile_t *Map_t::getBorderTile(TileType type, Tile_t *n1, Tile_t *n2, Tile_t *n3) 
                 // sets
                 pixel_dr = n3->_pixel_ur;
                 
-                incomplete = 1;
+                complete = 0;
                 
             } else if (n1 == NULL && n2 == NULL && n3 == NULL) {
                 return NULL;
@@ -244,14 +242,14 @@ Tile_t *Map_t::getBorderTile(TileType type, Tile_t *n1, Tile_t *n2, Tile_t *n3) 
                 // sets
                 pixel_dl = n1->_pixel_dr;
                 
-                incomplete = 1;
+                complete = 0;
                 
             } else if (n1 == NULL && n2 != NULL && n3 == NULL) {
                 
                 // sets
                 pixel_dr = n2->_pixel_dl;
                 
-                incomplete = 1;
+                complete = 0;
                 
             } else if (n1 == NULL && n2 == NULL && n3 != NULL) {
                 
@@ -336,14 +334,14 @@ Tile_t *Map_t::getBorderTile(TileType type, Tile_t *n1, Tile_t *n2, Tile_t *n3) 
                 // sets
                 pixel_ul = n2->_pixel_dl;
                 
-                incomplete = 1;
+                complete = 0;
                 
             } else if (n1 == NULL && n2 == NULL && n3 != NULL) {
                 
                 // sets
                 pixel_dl = n3->_pixel_ul;
                 
-                incomplete = 1;
+                complete = 0;
                 
             } else if (n1 == NULL && n2 == NULL && n3 == NULL) {
                 return NULL;
@@ -411,7 +409,7 @@ Tile_t *Map_t::getBorderTile(TileType type, Tile_t *n1, Tile_t *n2, Tile_t *n3) 
                 // sets
                 pixel_ul = n1->_pixel_ur;
                 
-                incomplete = 1;
+                complete = 0;
                 
             } else if (n1 == NULL && n2 != NULL && n3 == NULL) {
                 
@@ -426,7 +424,7 @@ Tile_t *Map_t::getBorderTile(TileType type, Tile_t *n1, Tile_t *n2, Tile_t *n3) 
                 // sets
                 pixel_ur = n3->_pixel_ul;
                 
-                incomplete = 1;
+                complete = 0;
                 
             } else if (n1 == NULL && n2 == NULL && n3 == NULL) {
                 return NULL;
@@ -437,8 +435,6 @@ Tile_t *Map_t::getBorderTile(TileType type, Tile_t *n1, Tile_t *n2, Tile_t *n3) 
     int perfect_match = 0;
     int soft_match = 0;
     list<Tile_t *>::iterator searched_tile;
-    
-    // recorremos todos los remaining tiles
     for (list<Tile_t *>::iterator it = _remaining_tiles.begin(); it != _remaining_tiles.end(); it++) {
         
         // si el tile es del tipo que buscamos
@@ -452,7 +448,7 @@ Tile_t *Map_t::getBorderTile(TileType type, Tile_t *n1, Tile_t *n2, Tile_t *n3) 
                             perfect_match++;
                             searched_tile = it;
                         }
-                    } else if(incomplete) {
+                    } else {
                         if (pixel_ur == (*it)->_pixel_ur || pixel_dr == (*it)->_pixel_dr) {
                             soft_match++;
                             searched_tile = it;
@@ -467,7 +463,7 @@ Tile_t *Map_t::getBorderTile(TileType type, Tile_t *n1, Tile_t *n2, Tile_t *n3) 
                             perfect_match++;
                             searched_tile = it;
                         }
-                    } else if(incomplete) {
+                    } else {
                         if (pixel_dl == (*it)->_pixel_dl || pixel_dr == (*it)->_pixel_dr) {
                             soft_match++;
                             searched_tile = it;
@@ -481,7 +477,7 @@ Tile_t *Map_t::getBorderTile(TileType type, Tile_t *n1, Tile_t *n2, Tile_t *n3) 
                             perfect_match++;
                             searched_tile = it;
                         }
-                    } else if(incomplete) {
+                    } else {
                         if (pixel_ul == (*it)->_pixel_ul || pixel_dl == (*it)->_pixel_dl) {
                             soft_match++;
                             searched_tile = it;
@@ -495,7 +491,7 @@ Tile_t *Map_t::getBorderTile(TileType type, Tile_t *n1, Tile_t *n2, Tile_t *n3) 
                             perfect_match++;
                             searched_tile = it;
                         }
-                    } else if(incomplete) {
+                    } else {
                         if (pixel_ul == (*it)->_pixel_ul || pixel_ur == (*it)->_pixel_ur) {
                             soft_match++;
                             searched_tile = it;
@@ -524,18 +520,13 @@ Tile_t *Map_t::getInternalTile(Tile_t *n1, Tile_t *n2, Tile_t *n3, Tile_t *n4) {
     Vec3b pixel_dl;
     Vec3b pixel_dr;
     
-    // initialize them as blacks or whites
+    // initialize them as black
     for (int i = 0; i < 3; i++) {
         pixel_ul.val[i] = 0;
         pixel_ur.val[i] = 0;
         pixel_dl.val[i] = 0;
         pixel_dr.val[i] = 0;
     }
-    
-    int incomplete = 0;
-    int complete = 0;
-    int perfect_match = 0;
-    int soft_match = 0;
     
     // checks
     if (n1 != NULL && n2 != NULL) {
@@ -566,12 +557,72 @@ Tile_t *Map_t::getInternalTile(Tile_t *n1, Tile_t *n2, Tile_t *n3, Tile_t *n4) {
         }
     }
     
+    // set case
+    int complete;
+    if ((n1 != NULL && n3 != NULL) || (n2 != NULL && n4 != NULL))
+        complete = 1;
+    else
+        complete = 0;
+    
     // set the pixels
     if (n1 != NULL) {
         pixel_ul = n1->_pixel_ur;
         pixel_dl = n1->_pixel_dr;
     }
     
+    if (n2 != NULL) {
+        pixel_ul = n2->_pixel_dl;
+        pixel_ur = n2->_pixel_dr;
+    }
+    
+    if (n3 != NULL) {
+        pixel_ur = n3->_pixel_ul;
+        pixel_dr = n3->_pixel_dl;
+    }
+    
+    if (n4 != NULL) {
+        pixel_dl = n4->_pixel_ul;
+        pixel_dr = n4->_pixel_ur;
+    }
+    
+    // create the needed tile
+    Tile_t dummy(INTERNAL, pixel_ul,pixel_ur, pixel_dl, pixel_dr);
+    
+    int perfect_match = 0;
+    int soft_match = 0;
+    list<Tile_t *>::iterator searched_tile;
+    for (list<Tile_t *>::iterator it = _remaining_tiles.begin(); it != _remaining_tiles.end(); it++) {
+        
+        if (complete) {
+            
+            // use the overloaded operator==
+            if((**it) == dummy) {
+                perfect_match++;
+                searched_tile = it;
+            }
+        } else {
+            
+            if((*it)->_type == dummy._type) {
+                
+                if ((dummy.isBlack(dummy._pixel_ul) || (!dummy.isBlack(dummy._pixel_ul) && dummy._pixel_ul == (*it)->_pixel_ul)) &&
+                    (dummy.isBlack(dummy._pixel_ur) || (!dummy.isBlack(dummy._pixel_ur) && dummy._pixel_ur == (*it)->_pixel_ur)) &&
+                    (dummy.isBlack(dummy._pixel_dl) || (!dummy.isBlack(dummy._pixel_dl) && dummy._pixel_dl == (*it)->_pixel_dl)) &&
+                    (dummy.isBlack(dummy._pixel_dr) || (!dummy.isBlack(dummy._pixel_dr) && dummy._pixel_dr == (*it)->_pixel_dr))) {
+                    soft_match++;
+                    searched_tile = it;
+                }
+            }
+        }
+    }
+    
+    // we return the tile if only one case can be found in the remaining tiles
+    Tile_t *tile;
+    if (perfect_match == 1 || soft_match == 1) {
+        tile = *searched_tile;
+        _remaining_tiles.erase(searched_tile);
+        return tile;
+    } else
+        return NULL;
 }
 
 void Map_t::FloodFill(int x, int y) {
@@ -630,10 +681,13 @@ void Map_t::FloodFill(int x, int y) {
     _ordered_tiles[y * _num_x + x] = ordered_tile;
     
     // left, up, right, down searches
-    FloodFill(x - 1, y + 0);
-    FloodFill(x + 0, y - 1);
     FloodFill(x + 1, y - 0);
     FloodFill(x - 0, y + 1);
+    
+    FloodFill(x - 1, y + 0);
+    FloodFill(x + 0, y - 1);
+    
+    
     
     return;
 }

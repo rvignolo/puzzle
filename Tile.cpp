@@ -34,6 +34,40 @@ Tile_t::Tile_t(Mat source_puzzle, int id, int xi, int yi, int width, int height)
     setTileType();
 }
 
+Tile_t::Tile_t(TileType type, Vec3b pixel_ul, Vec3b pixel_ur, Vec3b pixel_dl, Vec3b pixel_dr) {
+    
+    _type = type;
+    
+    _pixel_ul = pixel_ul;
+    _pixel_ur = pixel_ur;
+    _pixel_dl = pixel_dl;
+    _pixel_dr = pixel_dr;
+}
+
+bool Tile_t::operator==(Tile_t t2) {
+    
+    // TODO: analizar igualdad caso por caso! o sea si es internal, si es border up etc
+    
+    if (_type == t2._type) {
+        if(_pixel_ul == t2._pixel_ul && _pixel_ur == t2._pixel_ur && _pixel_dl == t2._pixel_dl && _pixel_dr == t2._pixel_dr)
+            return true;
+        else
+            return false;
+    } else 
+        return false;
+}
+
+bool Tile_t::operator!=(Tile_t t2) {
+    if (_type != t2._type)
+        return true;
+    else {
+        if(_pixel_ul != t2._pixel_ul || _pixel_ur != t2._pixel_ur || _pixel_dl != t2._pixel_dl || _pixel_dr != t2._pixel_dr)
+            return true;
+        else
+            return false;
+    }
+}
+
 void Tile_t::fillTilePixels(int width, int height) {
     
     _pixel_ul = _crop.at<Vec3b>(0 * (height - 1), 0 * (width - 1));
