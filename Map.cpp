@@ -637,8 +637,6 @@ void Map_t::FloodFill(int x, int y) {
     
     Tile_t *ordered_tile;
     
-    // TODO: FALTA REMOVER LOS CORNERS DE LA REMAINING!
-    
     // corners can be found without any 
     if (x == 0 && y == 0)
         ordered_tile = getCornerTile(UPPER_LEFT_CORNER);
@@ -662,8 +660,6 @@ void Map_t::FloodFill(int x, int y) {
         Tile_t *right_neighbour = (0 <= right_index && right_index < _num_x * _num_y) ? _ordered_tiles[right_index] : NULL;
         Tile_t *lower_neighbour = (0 <= lower_index && lower_index < _num_x * _num_y) ? _ordered_tiles[lower_index] : NULL;
         
-        // TODO: FALTA REMOVER LOS BORDERS AND INTERNALS DE LA REMAINING!
-        
         // border and internal tiles
         if (x == 0)
             ordered_tile = getBorderTile(LEFT_BORDER, upper_neighbour, right_neighbour, lower_neighbour);
@@ -672,7 +668,7 @@ void Map_t::FloodFill(int x, int y) {
         else if (x == _num_x - 1)
             ordered_tile = getBorderTile(RIGHT_BORDER, left_neighbour, upper_neighbour, lower_neighbour);
         else if (y == _num_y - 1)
-            ordered_tile = getBorderTile(LOWER_BORDER, left_neighbour, right_neighbour, upper_neighbour);
+            ordered_tile = getBorderTile(LOWER_BORDER, left_neighbour, upper_neighbour, right_neighbour);
         else
             ordered_tile = getInternalTile(left_neighbour, upper_neighbour, right_neighbour, lower_neighbour);
     }
@@ -680,23 +676,60 @@ void Map_t::FloodFill(int x, int y) {
     // set
     _ordered_tiles[y * _num_x + x] = ordered_tile;
     
-    // left, up, right, down searches
-    FloodFill(x + 1, y - 0);
-    FloodFill(x - 0, y + 1);
-    
-    FloodFill(x - 1, y + 0);
-    FloodFill(x + 0, y - 1);
-    
-    
-    
     return;
+}
+
+bool Map_t::isPuzzlecompleted(Tile_t **tiles) {
+ 
+    int n_tiles = 0;
+    for (int y = 0; y < _num_y; y++) {
+        for (int x = 0; x < _num_x; x++) {
+            if (tiles[y * _num_x + x] != NULL)
+                n_tiles++;
+        }
+    }
+    
+    cout << n_tiles << " tiles have been set" << endl ;
+    
+    return n_tiles == _num_x * _num_y ? true : false;
 }
 
 void Map_t::solvePuzzle() {
     
-    // fill the corners
-    FloodFill(0, 0);
+    int n_iter = 0;
+    while(!isPuzzlecompleted(_ordered_tiles) && n_iter < 50) {
+        for (int y = 0; y < _num_y; y++) {
+            for (int x = 0; x < _num_x; x++) {
+                FloodFill(x, y);
+            }
+        }
+        n_iter++;
+    }
     
+    Mat V;
+    Mat whiteBox = Mat::ones(_ordered_tiles[0]->_crop.rows, _ordered_tiles[0]->_crop.cols, _ordered_tiles[0]->_crop.type());
+    for (int y = 0; y < _num_y; y++) {
+        
+        Mat H;
+        for (int x = 1; x < _num_x; x++) {
+            if (x == 1)
+                hconcat(_ordered_tiles[y * _num_x + x - 1] != NULL ? _ordered_tiles[y * _num_x + x - 1]->_crop : whiteBox, _ordered_tiles[y * _num_x + x] != NULL ? _ordered_tiles[y * _num_x + x]->_crop : whiteBox, H);
+            else 
+                hconcat(H, _ordered_tiles[y * _num_x + x] != NULL ? _ordered_tiles[y * _num_x + x]->_crop : whiteBox, H);
+        }
+        
+        if (y == 0)
+            V = H;
+        else
+            vconcat(V, H, V);
+    }
+    
+    _solved_puzzle = V;
+    
+    namedWindow( "Display window", WINDOW_AUTOSIZE );// Create a window for display.
+    imshow( "Display window", _solved_puzzle );                   // Show our image inside it.
+    
+    waitKey(0);
 }
 
 Map_t::Map_t(const Map_t& orig) {

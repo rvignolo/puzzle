@@ -58,6 +58,8 @@ public:
     Tile_t *getBorderTile(TileType type, Tile_t *n1, Tile_t *n2, Tile_t *n3);
     Tile_t *getInternalTile(Tile_t *left_neighbour, Tile_t *upper_neighbour, Tile_t *right_neighbour, Tile_t *lower_neighbour);
     
+    bool isPuzzlecompleted(Tile_t **tiles);
+    
     void FloodFill(int x, int y);
     void solvePuzzle();
     
