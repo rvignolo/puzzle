@@ -44,7 +44,7 @@ Tile_t::Tile_t(TileType type, Vec3b pixel_ul, Vec3b pixel_ur, Vec3b pixel_dl, Ve
     _pixel_dr = pixel_dr;
 }
 
-bool Tile_t::operator==(Tile_t t2) {
+bool Tile_t::operator==(const Tile_t& t2) {
     
     // TODO: analizar igualdad caso por caso! o sea si es internal, si es border up etc
     
@@ -57,7 +57,7 @@ bool Tile_t::operator==(Tile_t t2) {
         return false;
 }
 
-bool Tile_t::operator!=(Tile_t t2) {
+bool Tile_t::operator!=(const Tile_t& t2) {
     if (_type != t2._type)
         return true;
     else {

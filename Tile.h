@@ -122,8 +122,8 @@ public:
             return false;
     }
     
-    bool operator==(Tile_t t2);
-    bool operator!=(Tile_t t2);
+    bool operator==(const Tile_t& t2);
+    bool operator!=(const Tile_t& t2);
 };
 
 #endif /* TILE_H */

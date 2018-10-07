@@ -586,7 +586,7 @@ Tile_t *Map_t::getInternalTile(Tile_t *n1, Tile_t *n2, Tile_t *n3, Tile_t *n4) {
     }
     
     // create the needed tile
-    Tile_t dummy(INTERNAL, pixel_ul,pixel_ur, pixel_dl, pixel_dr);
+    Tile_t dummy(INTERNAL, pixel_ul, pixel_ur, pixel_dl, pixel_dr);
     
     int perfect_match = 0;
     int soft_match = 0;
@@ -689,8 +689,6 @@ bool Map_t::isPuzzlecompleted(Tile_t **tiles) {
         }
     }
     
-    cout << n_tiles << " tiles have been set" << endl ;
-    
     return n_tiles == _num_x * _num_y ? true : false;
 }
 
@@ -726,8 +724,8 @@ void Map_t::solvePuzzle() {
     
     _solved_puzzle = V;
     
-    namedWindow( "Display window", WINDOW_AUTOSIZE );// Create a window for display.
-    imshow( "Display window", _solved_puzzle );                   // Show our image inside it.
+    namedWindow("Display window", WINDOW_AUTOSIZE);
+    imshow("Display window", _solved_puzzle);
     
     waitKey(0);
 }
