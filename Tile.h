@@ -1,14 +1,8 @@
 /*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
-
 /*
  * File:   Tile.h
  * Author: RamiroV
  *
- * Created on September 17, 2018, 2:49 PM
  */
 
 #ifndef TILE_H

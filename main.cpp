@@ -1,14 +1,7 @@
 /*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
-
-/*
  * File:   main.c
  * Author: RamiroV
  *
- * Created on September 17, 2018, 10:18 AM
  */
 
 #include <opencv2/core/core.hpp>
@@ -16,8 +9,7 @@
 #include <opencv2/imgproc/imgproc.hpp>
 #include <iostream>
 
-// Map class should be called Puzzle... right? It would be nicer.
-#include "Map.h"
+#include "Puzzle.h"
 
 using namespace cv;
 using namespace std;
@@ -30,7 +22,7 @@ int main (int argc, char** argv) {
         return EXIT_FAILURE;
     }
 
-    // read the source puzzle as a map
+    // read the source puzzle
     Puzzle_t puzzle(argv[1], 20, 20);
     
     // solve the puzzle
