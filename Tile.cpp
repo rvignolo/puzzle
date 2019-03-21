@@ -28,7 +28,7 @@ Tile_t::Tile_t(Mat source_puzzle, int id, int xi, int yi, int width, int height)
     _crop = source_puzzle(Rect(xi, yi, width, height));
     
     // fill the pixels
-    fillTilePixels(width, height);
+    setlTilePixels(width, height);
     
     // set tile type
     setTileType();
@@ -68,7 +68,7 @@ bool Tile_t::operator!=(const Tile_t& t2) {
     }
 }
 
-void Tile_t::fillTilePixels(int width, int height) {
+void Tile_t::setlTilePixels(int width, int height) {
     
     _pixel_ul = _crop.at<Vec3b>(0 * (height - 1), 0 * (width - 1));
     _pixel_ur = _crop.at<Vec3b>(0 * (height - 1), 1 * (width - 1));
