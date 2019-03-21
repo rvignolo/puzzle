@@ -63,7 +63,7 @@ Tile_t *Puzzle_t::getCornerTile(TileType type) {
 
     Tile_t *tile;
     for (list<Tile_t *>::iterator it = _remaining_tiles.begin(); it != _remaining_tiles.end(); it++) {
-        if ((*it)->_type == type) {
+        if ((*it)->getTileType() == type) {
             tile = *it;
             _remaining_tiles.erase(it);
             return tile;
@@ -121,58 +121,58 @@ Tile_t *Puzzle_t::getBorderTile(TileType type, Tile_t *n1, Tile_t *n2, Tile_t *n
             } else if (n1 != NULL && n2 != NULL && n3 == NULL) {
 
                 // checks
-                if (n1->_pixel_dr != n2->_pixel_ul) {
+                if (n1->getPixelDr() != n2->getPixelUl()) {
                     cout << "inconsistency found when searching a border tile" << endl ;
                     exit(1);
                 }
 
                 // sets
-                pixel_ur = n2->_pixel_ul;
-                pixel_dr = n2->_pixel_dl;
+                pixel_ur = n2->getPixelUl();
+                pixel_dr = n2->getPixelDl();
 
                 complete = 1;
 
             } else if (n1 != NULL && n2 == NULL && n3 != NULL) {
 
                 // sets
-                pixel_ur = n1->_pixel_dr;
-                pixel_dr = n3->_pixel_ur;
+                pixel_ur = n1->getPixelDr();
+                pixel_dr = n3->getPixelUr();
 
                 complete = 1;
 
             } else if (n1 == NULL && n2 != NULL && n3 != NULL) {
 
                 // cheks
-                if (n2->_pixel_dl != n3->_pixel_ur) {
+                if (n2->getPixelDl() != n3->getPixelUr()) {
                     cout << "inconsistency found when searching a border tile" << endl ;
                     exit(1);
                 }
 
                 // sets
-                pixel_ur = n2->_pixel_ul;
-                pixel_dr = n2->_pixel_dl;
+                pixel_ur = n2->getPixelUl();
+                pixel_dr = n2->getPixelDl();
 
                 complete = 1;
 
             } else if (n1 != NULL && n2 == NULL && n3 == NULL) {
 
                 // sets
-                pixel_ur = n1->_pixel_dr;
+                pixel_ur = n1->getPixelDr();
 
                 complete = 0;
 
             } else if (n1 == NULL && n2 != NULL && n3 == NULL) {
 
                 // sets
-                pixel_ur = n2->_pixel_ul;
-                pixel_dr = n2->_pixel_dl;
+                pixel_ur = n2->getPixelUl();
+                pixel_dr = n2->getPixelDl();
 
                 complete = 1;
 
             } else if (n1 == NULL && n2 == NULL && n3 != NULL) {
 
                 // sets
-                pixel_dr = n3->_pixel_ur;
+                pixel_dr = n3->getPixelUr();
 
                 complete = 0;
 
@@ -186,77 +186,77 @@ Tile_t *Puzzle_t::getBorderTile(TileType type, Tile_t *n1, Tile_t *n2, Tile_t *n
             if (n1 != NULL && n2 != NULL && n3 != NULL) {
 
                 // checks
-                if (n1->_pixel_dr != n3->_pixel_ul) {
+                if (n1->getPixelDr() != n3->getPixelUl()) {
                     cout << "inconsistency found when searching a border tile" << endl ;
                     exit(1);
                 }
 
-                if (n2->_pixel_dl != n3->_pixel_ur) {
+                if (n2->getPixelDl() != n3->getPixelUr()) {
                     cout << "inconsistency found when searching a border tile" << endl ;
                     exit(1);
                 }
 
                 // sets
-                pixel_dl = n3->_pixel_ul;
-                pixel_dr = n3->_pixel_ur;
+                pixel_dl = n3->getPixelUl();
+                pixel_dr = n3->getPixelUr();
 
                 complete = 1;
 
             } else if (n1 != NULL && n2 != NULL && n3 == NULL) {
 
                 // sets
-                pixel_dl = n1->_pixel_dr;
-                pixel_dr = n2->_pixel_dl;
+                pixel_dl = n1->getPixelDr();
+                pixel_dr = n2->getPixelDl();
 
                 complete = 1;
 
             } else if (n1 != NULL && n2 == NULL && n3 != NULL) {
 
                 // checks
-                if (n1->_pixel_dr != n3->_pixel_ul) {
+                if (n1->getPixelDr() != n3->getPixelUl()) {
                     cout << "inconsistency found when searching a border tile" << endl ;
                     exit(1);
                 }
 
                 // sets
-                pixel_dl = n3->_pixel_ul;
-                pixel_dr = n3->_pixel_ur;
+                pixel_dl = n3->getPixelUl();
+                pixel_dr = n3->getPixelUr();
 
                 complete = 1;
 
             } else if (n1 == NULL && n2 != NULL && n3 != NULL) {
 
                 // cheks
-                if (n2->_pixel_dl != n3->_pixel_ur) {
+                if (n2->getPixelDl() != n3->getPixelUr()) {
                     cout << "inconsistency found when searching a border tile" << endl ;
                     exit(1);
                 }
 
                 // sets
-                pixel_dl = n3->_pixel_ul;
-                pixel_dr = n3->_pixel_ur;
+                pixel_dl = n3->getPixelUl();
+                pixel_dr = n3->getPixelUr();
 
                 complete = 1;
 
             } else if (n1 != NULL && n2 == NULL && n3 == NULL) {
 
                 // sets
-                pixel_dl = n1->_pixel_dr;
+                pixel_dl = n1->getPixelDr();
 
                 complete = 0;
 
             } else if (n1 == NULL && n2 != NULL && n3 == NULL) {
 
                 // sets
-                pixel_dr = n2->_pixel_dl;
+                pixel_dr = n2->getPixelDl();
 
                 complete = 0;
 
             } else if (n1 == NULL && n2 == NULL && n3 != NULL) {
 
                 // sets
-                pixel_dl = n3->_pixel_ul;
-                pixel_dr = n3->_pixel_ur;
+                pixel_dl = n3->getPixelUl();
+                pixel_dr = n3->getPixelUr();
 
                 complete = 1;
 
@@ -270,77 +270,77 @@ Tile_t *Puzzle_t::getBorderTile(TileType type, Tile_t *n1, Tile_t *n2, Tile_t *n
             if (n1 != NULL && n2 != NULL && n3 != NULL) {
 
                 // checks
-                if (n1->_pixel_ur != n2->_pixel_dl) {
+                if (n1->getPixelUr() != n2->getPixelDl()) {
                     cout << "inconsistency found when searching a border tile" << endl ;
                     exit(1);
                 }
 
-                if (n1->_pixel_dr != n3->_pixel_ul) {
+                if (n1->getPixelDr() != n3->getPixelUl()) {
                     cout << "inconsistency found when searching a border tile" << endl ;
                     exit(1);
                 }
 
                 // sets
-                pixel_ul = n1->_pixel_ur;
-                pixel_dl = n1->_pixel_dr;
+                pixel_ul = n1->getPixelUr();
+                pixel_dl = n1->getPixelDr();
 
                 complete = 1;
 
             } else if (n1 != NULL && n2 != NULL && n3 == NULL) {
 
                 // checks
-                if (n1->_pixel_ur != n2->_pixel_dl) {
+                if (n1->getPixelUr() != n2->getPixelDl()) {
                     cout << "inconsistency found when searching a border tile" << endl ;
                     exit(1);
                 }
 
                 // sets
-                pixel_ul = n1->_pixel_ur;
-                pixel_dl = n1->_pixel_dr;
+                pixel_ul = n1->getPixelUr();
+                pixel_dl = n1->getPixelDr();
 
                 complete = 1;
 
             } else if (n1 != NULL && n2 == NULL && n3 != NULL) {
 
                 // checks
-                if (n1->_pixel_dr != n3->_pixel_ul) {
+                if (n1->getPixelDr() != n3->getPixelUl()) {
                     cout << "inconsistency found when searching a border tile" << endl ;
                     exit(1);
                 }
 
                 // sets
-                pixel_ul = n1->_pixel_ur;
-                pixel_dl = n1->_pixel_dr;
+                pixel_ul = n1->getPixelUr();
+                pixel_dl = n1->getPixelDr();
 
                 complete = 1;
 
             } else if (n1 == NULL && n2 != NULL && n3 != NULL) {
 
                 // sets
-                pixel_ul = n2->_pixel_dl;
-                pixel_dl = n3->_pixel_ul;
+                pixel_ul = n2->getPixelDl();
+                pixel_dl = n3->getPixelUl();
 
                 complete = 1;
 
             } else if (n1 != NULL && n2 == NULL && n3 == NULL) {
 
                 // sets
-                pixel_ul = n1->_pixel_ur;
-                pixel_dl = n1->_pixel_dr;
+                pixel_ul = n1->getPixelUr();
+                pixel_dl = n1->getPixelDr();
 
                 complete = 1;
 
             } else if (n1 == NULL && n2 != NULL && n3 == NULL) {
 
                 // sets
-                pixel_ul = n2->_pixel_dl;
+                pixel_ul = n2->getPixelDl();
 
                 complete = 0;
 
             } else if (n1 == NULL && n2 == NULL && n3 != NULL) {
 
                 // sets
-                pixel_dl = n3->_pixel_ul;
+                pixel_dl = n3->getPixelUl();
 
                 complete = 0;
 
@@ -354,76 +354,76 @@ Tile_t *Puzzle_t::getBorderTile(TileType type, Tile_t *n1, Tile_t *n2, Tile_t *n
             if (n1 != NULL && n2 != NULL && n3 != NULL) {
 
                 // checks
-                if (n1->_pixel_ur != n2->_pixel_dl) {
+                if (n1->getPixelUr() != n2->getPixelDl()) {
                     cout << "inconsistency found when searching a border tile" << endl ;
                     exit(1);
                 }
 
-                if (n2->_pixel_dr != n3->_pixel_ul) {
+                if (n2->getPixelDr() != n3->getPixelUl()) {
                     cout << "inconsistency found when searching a border tile" << endl ;
                     exit(1);
                 }
 
                 // sets
-                pixel_ul = n2->_pixel_dl;
-                pixel_ur = n2->_pixel_dr;
+                pixel_ul = n2->getPixelDl();
+                pixel_ur = n2->getPixelDr();
 
                 complete = 1;
 
             } else if (n1 != NULL && n2 != NULL && n3 == NULL) {
 
                 // checks
-                if (n1->_pixel_ur != n2->_pixel_dl) {
+                if (n1->getPixelUr() != n2->getPixelDl()) {
                     cout << "inconsistency found when searching a border tile" << endl ;
                     exit(1);
                 }
 
                 // sets
-                pixel_ul = n2->_pixel_dl;
-                pixel_ur = n2->_pixel_dr;
+                pixel_ul = n2->getPixelDl();
+                pixel_ur = n2->getPixelDr();
 
                 complete = 1;
 
             } else if (n1 != NULL && n2 == NULL && n3 != NULL) {
 
                 // sets
-                pixel_ul = n1->_pixel_ur;
-                pixel_ur = n3->_pixel_ul;
+                pixel_ul = n1->getPixelUr();
+                pixel_ur = n3->getPixelUl();
 
                 complete = 1;
 
             } else if (n1 == NULL && n2 != NULL && n3 != NULL) {
 
-                if (n2->_pixel_dr != n3->_pixel_ul) {
+                if (n2->getPixelDr() != n3->getPixelUl()) {
                     cout << "inconsistency found when searching a border tile" << endl ;
                     exit(1);
                 }
 
                 // sets
-                pixel_ul = n2->_pixel_dl;
-                pixel_ur = n2->_pixel_dr;
+                pixel_ul = n2->getPixelDl();
+                pixel_ur = n2->getPixelDr();
 
                 complete = 1;
 
             } else if (n1 != NULL && n2 == NULL && n3 == NULL) {
 
                 // sets
-                pixel_ul = n1->_pixel_ur;
+                pixel_ul = n1->getPixelUr();
 
                 complete = 0;
 
             } else if (n1 == NULL && n2 != NULL && n3 == NULL) {
 
                 // sets
-                pixel_ul = n2->_pixel_dl;
-                pixel_ur = n2->_pixel_dr;
+                pixel_ul = n2->getPixelDl();
+                pixel_ur = n2->getPixelDr();
 
                 complete = 1;
 
             } else if (n1 == NULL && n2 == NULL && n3 != NULL) {
 
                 // sets
-                pixel_ur = n3->_pixel_ul;
+                pixel_ur = n3->getPixelUl();
 
                 complete = 0;
 
@@ -439,18 +439,18 @@ Tile_t *Puzzle_t::getBorderTile(TileType type, Tile_t *n1, Tile_t *n2, Tile_t *n
     for (list<Tile_t *>::iterator it = _remaining_tiles.begin(); it != _remaining_tiles.end(); it++) {
 
         // si el tile es del tipo que buscamos
-        if((*it)->_type == type) {
+        if((*it)->getTileType() == type) {
 
             switch(type) {
                 case LEFT_BORDER:
 
                     if (complete) {
-                        if(pixel_ur == (*it)->_pixel_ur && pixel_dr == (*it)->_pixel_dr) {
+                        if(pixel_ur == (*it)->getPixelUr() && pixel_dr == (*it)->getPixelDr()) {
                             perfect_match++;
                             searched_tile = it;
                         }
                     } else {
-                        if (pixel_ur == (*it)->_pixel_ur || pixel_dr == (*it)->_pixel_dr) {
+                        if (pixel_ur == (*it)->getPixelUr() || pixel_dr == (*it)->getPixelDr()) {
                             soft_match++;
                             searched_tile = it;
                         }
@@ -460,12 +460,12 @@ Tile_t *Puzzle_t::getBorderTile(TileType type, Tile_t *n1, Tile_t *n2, Tile_t *n
                 case UPPER_BORDER:
 
                     if (complete) {
-                        if(pixel_dl == (*it)->_pixel_dl && pixel_dr == (*it)->_pixel_dr) {
+                        if(pixel_dl == (*it)->getPixelDl() && pixel_dr == (*it)->getPixelDr()) {
                             perfect_match++;
                             searched_tile = it;
                         }
                     } else {
-                        if (pixel_dl == (*it)->_pixel_dl || pixel_dr == (*it)->_pixel_dr) {
+                        if (pixel_dl == (*it)->getPixelDl() || pixel_dr == (*it)->getPixelDr()) {
                             soft_match++;
                             searched_tile = it;
                         }
@@ -474,12 +474,12 @@ Tile_t *Puzzle_t::getBorderTile(TileType type, Tile_t *n1, Tile_t *n2, Tile_t *n
 
                 case RIGHT_BORDER:
                     if (complete) {
-                        if(pixel_ul == (*it)->_pixel_ul && pixel_dl == (*it)->_pixel_dl) {
+                        if(pixel_ul == (*it)->getPixelUl() && pixel_dl == (*it)->getPixelDl()) {
                             perfect_match++;
                             searched_tile = it;
                         }
                     } else {
-                        if (pixel_ul == (*it)->_pixel_ul || pixel_dl == (*it)->_pixel_dl) {
+                        if (pixel_ul == (*it)->getPixelUl() || pixel_dl == (*it)->getPixelDl()) {
                             soft_match++;
                             searched_tile = it;
                         }
@@ -488,12 +488,12 @@ Tile_t *Puzzle_t::getBorderTile(TileType type, Tile_t *n1, Tile_t *n2, Tile_t *n
 
                 case LOWER_BORDER:
                     if (complete) {
-                        if(pixel_ul == (*it)->_pixel_ul && pixel_ur == (*it)->_pixel_ur) {
+                        if(pixel_ul == (*it)->getPixelUl() && pixel_ur == (*it)->getPixelUr()) {
                             perfect_match++;
                             searched_tile = it;
                         }
                     } else {
-                        if (pixel_ul == (*it)->_pixel_ul || pixel_ur == (*it)->_pixel_ur) {
+                        if (pixel_ul == (*it)->getPixelUl() || pixel_ur == (*it)->getPixelUr()) {
                             soft_match++;
                             searched_tile = it;
                         }
@@ -531,28 +531,28 @@ Tile_t *Puzzle_t::getInternalTile(Tile_t *n1, Tile_t *n2, Tile_t *n3, Tile_t *n4
 
     // checks
     if (n1 != NULL && n2 != NULL) {
-        if (n1->_pixel_ur != n2->_pixel_dl) {
+        if (n1->getPixelUr() != n2->getPixelDl()) {
             cout << "inconsistency found when searching an internal tile" << endl ;
             exit(1);
         }
     }
 
     if (n2 != NULL && n3 != NULL) {
-        if (n2->_pixel_dr != n3->_pixel_ul) {
+        if (n2->getPixelDr() != n3->getPixelUl()) {
             cout << "inconsistency found when searching an internal tile" << endl ;
             exit(1);
         }
     }
 
     if (n3 != NULL && n4 != NULL) {
-        if (n3->_pixel_dl != n4->_pixel_ur) {
+        if (n3->getPixelDl() != n4->getPixelUr()) {
             cout << "inconsistency found when searching an internal tile" << endl ;
             exit(1);
         }
     }
 
     if (n4 != NULL && n1 != NULL) {
-        if (n4->_pixel_ul != n1->_pixel_dr) {
+        if (n4->getPixelUl() != n1->getPixelDr()) {
             cout << "inconsistency found when searching an internal tile" << endl ;
             exit(1);
         }
@@ -567,23 +567,23 @@ Tile_t *Puzzle_t::getInternalTile(Tile_t *n1, Tile_t *n2, Tile_t *n3, Tile_t *n4
 
     // set the pixels
     if (n1 != NULL) {
-        pixel_ul = n1->_pixel_ur;
-        pixel_dl = n1->_pixel_dr;
+        pixel_ul = n1->getPixelUr();
+        pixel_dl = n1->getPixelDr();
     }
 
     if (n2 != NULL) {
-        pixel_ul = n2->_pixel_dl;
-        pixel_ur = n2->_pixel_dr;
+        pixel_ul = n2->getPixelDl();
+        pixel_ur = n2->getPixelDr();
     }
 
     if (n3 != NULL) {
-        pixel_ur = n3->_pixel_ul;
-        pixel_dr = n3->_pixel_dl;
+        pixel_ur = n3->getPixelUl();
+        pixel_dr = n3->getPixelDl();
     }
 
     if (n4 != NULL) {
-        pixel_dl = n4->_pixel_ul;
-        pixel_dr = n4->_pixel_ur;
+        pixel_dl = n4->getPixelUl();
+        pixel_dr = n4->getPixelUr();
     }
 
     // create the needed tile
@@ -603,12 +603,12 @@ Tile_t *Puzzle_t::getInternalTile(Tile_t *n1, Tile_t *n2, Tile_t *n3, Tile_t *n4
             }
         } else {
 
-            if((*it)->_type == dummy._type) {
+            if((*it)->getTileType() == dummy.getTileType()) {
 
-                if ((dummy.isBlack(dummy._pixel_ul) || (!dummy.isBlack(dummy._pixel_ul) && dummy._pixel_ul == (*it)->_pixel_ul)) &&
-                    (dummy.isBlack(dummy._pixel_ur) || (!dummy.isBlack(dummy._pixel_ur) && dummy._pixel_ur == (*it)->_pixel_ur)) &&
-                    (dummy.isBlack(dummy._pixel_dl) || (!dummy.isBlack(dummy._pixel_dl) && dummy._pixel_dl == (*it)->_pixel_dl)) &&
-                    (dummy.isBlack(dummy._pixel_dr) || (!dummy.isBlack(dummy._pixel_dr) && dummy._pixel_dr == (*it)->_pixel_dr))) {
+                if ((dummy.isBlack(dummy.getPixelUl()) || (!dummy.isBlack(dummy.getPixelUl()) && dummy.getPixelUl() == (*it)->getPixelUl())) &&
+                    (dummy.isBlack(dummy.getPixelUr()) || (!dummy.isBlack(dummy.getPixelUr()) && dummy.getPixelUr() == (*it)->getPixelUr())) &&
+                    (dummy.isBlack(dummy.getPixelDl()) || (!dummy.isBlack(dummy.getPixelDl()) && dummy.getPixelDl() == (*it)->getPixelDl())) &&
+                    (dummy.isBlack(dummy.getPixelDr()) || (!dummy.isBlack(dummy.getPixelDr()) && dummy.getPixelDr() == (*it)->getPixelDr()))) {
                     soft_match++;
                     searched_tile = it;
                 }
@@ -693,15 +693,15 @@ void Puzzle_t::solvePuzzle() {
     }
 
     Mat V;
-    Mat whiteBox = Mat::ones(_ordered_tiles[0]->_crop.rows, _ordered_tiles[0]->_crop.cols, _ordered_tiles[0]->_crop.type());
+    Mat whiteBox = Mat::ones(_ordered_tiles[0]->getCrop().rows, _ordered_tiles[0]->getCrop().cols, _ordered_tiles[0]->getCrop().type());
     for (int y = 0; y < _num_y; y++) {
 
         Mat H;
         for (int x = 1; x < _num_x; x++) {
             if (x == 1)
-                hconcat(_ordered_tiles[y * _num_x + x - 1] != NULL ? _ordered_tiles[y * _num_x + x - 1]->_crop : whiteBox, _ordered_tiles[y * _num_x + x] != NULL ? _ordered_tiles[y * _num_x + x]->_crop : whiteBox, H);
+                hconcat(_ordered_tiles[y * _num_x + x - 1] != NULL ? _ordered_tiles[y * _num_x + x - 1]->getCrop() : whiteBox, _ordered_tiles[y * _num_x + x] != NULL ? _ordered_tiles[y * _num_x + x]->getCrop() : whiteBox, H);
             else
-                hconcat(H, _ordered_tiles[y * _num_x + x] != NULL ? _ordered_tiles[y * _num_x + x]->_crop : whiteBox, H);
+                hconcat(H, _ordered_tiles[y * _num_x + x] != NULL ? _ordered_tiles[y * _num_x + x]->getCrop() : whiteBox, H);
         }
 
         if (y == 0)
